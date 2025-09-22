@@ -4,7 +4,7 @@ import numpy as np
 from typing import List, Dict, Any
 
 class IrisPredictor:
-    def __init__(self, model_path: str = "artifacts/iris_model.pkl"):
+    def __init__(self, model_path: str = "models/iris/artifacts/iris_model.pkl"):
         with open(model_path, 'rb') as f:
             self.model = pickle.load(f)
         self.class_names = ['setosa', 'versicolor', 'virginica']
