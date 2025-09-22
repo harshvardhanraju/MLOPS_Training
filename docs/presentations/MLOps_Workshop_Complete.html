@@ -1,0 +1,2443 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MLOps Workshop: Complete Pipeline Implementation</title>
+        <style>
+            @page {
+                size: A4;
+                margin: 2cm 1.5cm;
+                @top-center {
+                    content: "MLOps Workshop - Complete Pipeline Implementation";
+                    font-size: 10pt;
+                    color: #666;
+                    border-bottom: 1px solid #ddd;
+                    padding-bottom: 5pt;
+                }
+                @bottom-center {
+                    content: "Page " counter(page) " of " counter(pages);
+                    font-size: 10pt;
+                    color: #666;
+                }
+            }
+
+            body {
+                font-family: 'Arial', 'Helvetica', sans-serif;
+                line-height: 1.6;
+                color: #333;
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            h1 {
+                color: #2c3e50;
+                border-bottom: 3px solid #3498db;
+                padding-bottom: 10px;
+                page-break-before: always;
+                font-size: 28pt;
+                margin-top: 0;
+            }
+
+            h1:first-of-type {
+                page-break-before: avoid;
+                text-align: center;
+                border-bottom: none;
+                color: #e74c3c;
+                font-size: 36pt;
+                margin-bottom: 20pt;
+            }
+
+            h2 {
+                color: #34495e;
+                border-left: 4px solid #3498db;
+                padding-left: 15px;
+                margin-top: 30px;
+                font-size: 20pt;
+                page-break-after: avoid;
+            }
+
+            h3 {
+                color: #2980b9;
+                margin-top: 25px;
+                font-size: 16pt;
+                page-break-after: avoid;
+            }
+
+            h4 {
+                color: #27ae60;
+                margin-top: 20px;
+                font-size: 14pt;
+                page-break-after: avoid;
+            }
+
+            p {
+                margin-bottom: 12px;
+                text-align: justify;
+                font-size: 11pt;
+            }
+
+            ul, ol {
+                margin-bottom: 15px;
+                padding-left: 25px;
+                font-size: 11pt;
+            }
+
+            li {
+                margin-bottom: 5px;
+            }
+
+            code {
+                background-color: #f8f9fa;
+                padding: 2px 6px;
+                border-radius: 3px;
+                font-family: 'Courier New', monospace;
+                font-size: 10pt;
+                border: 1px solid #e9ecef;
+            }
+
+            pre {
+                background-color: #f8f9fa;
+                padding: 15px;
+                border-radius: 5px;
+                border: 1px solid #e9ecef;
+                overflow-x: auto;
+                font-size: 9pt;
+                line-height: 1.4;
+                margin: 15px 0;
+                page-break-inside: avoid;
+            }
+
+            pre code {
+                background-color: transparent;
+                padding: 0;
+                border: none;
+                font-size: 9pt;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 15px 0;
+                font-size: 10pt;
+                page-break-inside: avoid;
+            }
+
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+
+            th {
+                background-color: #3498db;
+                color: white;
+                font-weight: bold;
+            }
+
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+
+            blockquote {
+                border-left: 4px solid #3498db;
+                margin: 20px 0;
+                padding: 10px 20px;
+                background-color: #f8f9fa;
+                font-style: italic;
+            }
+
+            .advantages {
+                background-color: #d4edda;
+                border: 1px solid #c3e6cb;
+                border-radius: 5px;
+                padding: 10px;
+                margin: 10px 0;
+            }
+
+            .disadvantages {
+                background-color: #f8d7da;
+                border: 1px solid #f5c6cb;
+                border-radius: 5px;
+                padding: 10px;
+                margin: 10px 0;
+            }
+
+            .architecture-diagram {
+                background-color: #f0f0f0;
+                border: 2px solid #3498db;
+                border-radius: 10px;
+                padding: 20px;
+                margin: 20px 0;
+                font-family: 'Courier New', monospace;
+                font-size: 9pt;
+                line-height: 1.2;
+                text-align: center;
+                page-break-inside: avoid;
+            }
+
+            .toc {
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 5px;
+                padding: 20px;
+                margin: 20px 0;
+                page-break-after: always;
+            }
+
+            .toc h2 {
+                margin-top: 0;
+                border: none;
+                padding: 0;
+                color: #2c3e50;
+            }
+
+            .toc ul {
+                list-style-type: none;
+                padding-left: 0;
+            }
+
+            .toc li {
+                margin-bottom: 8px;
+            }
+
+            .toc a {
+                text-decoration: none;
+                color: #3498db;
+                font-weight: bold;
+            }
+
+            .section-break {
+                page-break-before: always;
+            }
+
+            .no-break {
+                page-break-inside: avoid;
+            }
+
+            .highlight {
+                background-color: #fff3cd;
+                border: 1px solid #ffeaa7;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 15px 0;
+            }
+
+            .warning {
+                background-color: #f8d7da;
+                border: 1px solid #f5c6cb;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 15px 0;
+            }
+
+            .info {
+                background-color: #d1ecf1;
+                border: 1px solid #bee5eb;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 15px 0;
+            }
+
+            .footer {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                text-align: center;
+                font-size: 10pt;
+                color: #666;
+            }
+
+            /* Specific styling for code blocks */
+            .language-python, .language-yaml, .language-bash, .language-dockerfile {
+                background-color: #2c3e50;
+                color: #ecf0f1;
+            }
+
+            .language-python code, .language-yaml code, .language-bash code, .language-dockerfile code {
+                color: #ecf0f1;
+            }
+
+            /* Style architecture diagrams */
+            pre:contains("┌"), pre:contains("│"), pre:contains("└") {
+                background-color: #f0f8ff;
+                border: 2px solid #3498db;
+                font-family: 'Courier New', monospace;
+                font-size: 8pt;
+                text-align: left;
+                page-break-inside: avoid;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 id="mlops-workshop-complete-pipeline-implementation">MLOps Workshop: Complete Pipeline Implementation</h1>
+<h2 id="professional-knowledge-transfer-session">Professional Knowledge Transfer Session</h2>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#introduction--overview">Introduction &amp; Overview</a></li>
+<li><a href="#mlops-architecture">MLOps Architecture</a></li>
+<li><a href="#data-versioning-dvc">Data Versioning (DVC)</a></li>
+<li><a href="#model-versioning--experiment-tracking-mlflow">Model Versioning &amp; Experiment Tracking (MLflow)</a></li>
+<li><a href="#model-serving-fastapi">Model Serving (FastAPI)</a></li>
+<li><a href="#monitoring--observability-prometheus--grafana">Monitoring &amp; Observability (Prometheus + Grafana)</a></li>
+<li><a href="#cicd-pipelines-github-actions">CI/CD Pipelines (GitHub Actions)</a></li>
+<li><a href="#containerization-docker">Containerization (Docker)</a></li>
+<li><a href="#data-drift-detection-evidently-ai">Data Drift Detection (Evidently AI)</a></li>
+<li><a href="#automated-testing">Automated Testing</a></li>
+<li><a href="#integration--architecture">Integration &amp; Architecture</a></li>
+<li><a href="#best-practices--next-steps">Best Practices &amp; Next Steps</a></li>
+</ol>
+<hr />
+<h2 id="introduction-overview">Introduction &amp; Overview</h2>
+<h3 id="what-is-mlops">What is MLOps?</h3>
+<p><strong>MLOps (Machine Learning Operations)</strong> is a practice that aims to deploy and maintain machine learning models in production reliably and efficiently.</p>
+<h4 id="key-principles">Key Principles:</h4>
+<ul>
+<li><strong>Automation</strong>: Automated pipelines for training, testing, and deployment</li>
+<li><strong>Monitoring</strong>: Continuous monitoring of model performance and data quality</li>
+<li><strong>Versioning</strong>: Track changes in data, code, and models</li>
+<li><strong>Collaboration</strong>: Bridge the gap between data science and operations teams</li>
+<li><strong>Reproducibility</strong>: Ensure consistent results across environments</li>
+</ul>
+<h4 id="why-mlops-matters">Why MLOps Matters:</h4>
+<ul>
+<li><strong>Business Impact</strong>: 85% of ML projects fail to reach production</li>
+<li><strong>Technical Debt</strong>: Manual processes create maintenance overhead</li>
+<li><strong>Compliance</strong>: Regulatory requirements for model explainability</li>
+<li><strong>Scalability</strong>: Handle multiple models across different environments</li>
+</ul>
+<h3 id="workshop-objectives">Workshop Objectives</h3>
+<p>By the end of this session, you will understand:
+- Complete MLOps pipeline architecture
+- 8 essential MLOps tools and their integration
+- Practical implementation strategies
+- Production deployment considerations</p>
+<hr />
+<h2 id="mlops-architecture">MLOps Architecture</h2>
+<h3 id="overall-system-architecture">Overall System Architecture</h3>
+<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────┐
+│                    MLOps Complete Pipeline                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐         │
+│  │    Data     │────│  Training   │────│   Serving   │         │
+│  │   Layer     │    │    Layer    │    │    Layer    │         │
+│  └─────────────┘    └─────────────┘    └─────────────┘         │
+│         │                   │                   │              │
+│         └───────────────────┼───────────────────┘              │
+│                             │                                  │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │              Monitoring &amp; Observability                │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+
+<h3 id="technology-stack">Technology Stack</h3>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Technology</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Data</strong></td>
+<td>DVC</td>
+<td>Data versioning and pipeline management</td>
+</tr>
+<tr>
+<td><strong>Training</strong></td>
+<td>MLflow</td>
+<td>Experiment tracking and model registry</td>
+</tr>
+<tr>
+<td><strong>Serving</strong></td>
+<td>FastAPI</td>
+<td>REST API for model inference</td>
+</tr>
+<tr>
+<td><strong>Monitoring</strong></td>
+<td>Prometheus + Grafana</td>
+<td>Metrics collection and visualization</td>
+</tr>
+<tr>
+<td><strong>CI/CD</strong></td>
+<td>GitHub Actions</td>
+<td>Automated testing and deployment</td>
+</tr>
+<tr>
+<td><strong>Infrastructure</strong></td>
+<td>Docker</td>
+<td>Containerization and orchestration</td>
+</tr>
+<tr>
+<td><strong>Quality</strong></td>
+<td>Evidently AI</td>
+<td>Data drift and model performance monitoring</td>
+</tr>
+<tr>
+<td><strong>Testing</strong></td>
+<td>Pytest</td>
+<td>Automated testing framework</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="data-versioning-dvc">Data Versioning (DVC)</h2>
+<h3 id="what-is-dvc">What is DVC?</h3>
+<p><strong>Data Version Control (DVC)</strong> is an open-source tool for data science and machine learning projects that provides:
+- Git-like versioning for datasets and ML models
+- Reproducible ML pipelines
+- Experiment management</p>
+<h3 id="key-features">Key Features</h3>
+<h4 id="advantages">Advantages ✅</h4>
+<ul>
+<li><strong>Version Control</strong>: Track changes in large datasets</li>
+<li><strong>Reproducibility</strong>: Recreate exact experiment conditions</li>
+<li><strong>Pipeline Management</strong>: Define and execute ML workflows</li>
+<li><strong>Storage Agnostic</strong>: Works with S3, GCS, Azure, local storage</li>
+<li><strong>Git Integration</strong>: Seamless integration with Git workflows</li>
+</ul>
+<h4 id="disadvantages">Disadvantages ❌</h4>
+<ul>
+<li><strong>Learning Curve</strong>: Additional complexity for simple projects</li>
+<li><strong>Storage Costs</strong>: Requires external storage for large datasets</li>
+<li><strong>Performance</strong>: Can be slow with very large files</li>
+</ul>
+<h3 id="usage-example">Usage Example</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Initialize DVC in your project</span>
+dvc<span class="w"> </span>init
+
+<span class="c1"># Add data to DVC tracking</span>
+dvc<span class="w"> </span>add<span class="w"> </span>data/train.csv
+
+<span class="c1"># Create a pipeline stage</span>
+dvc<span class="w"> </span>stage<span class="w"> </span>add<span class="w"> </span>-n<span class="w"> </span>train<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span>data/train.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span>scripts/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-o<span class="w"> </span>models/model.pkl<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>python<span class="w"> </span>scripts/train.py
+
+<span class="c1"># Run the pipeline</span>
+dvc<span class="w"> </span>repro
+
+<span class="c1"># Push data to remote storage</span>
+dvc<span class="w"> </span>push
+</code></pre></div>
+
+<h3 id="dvc-pipeline-configuration">DVC Pipeline Configuration</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># dvc.yaml</span>
+<span class="nt">stages</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">prepare</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python src/prepare.py</span>
+<span class="w">    </span><span class="nt">deps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">src/prepare.py</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data/raw</span>
+<span class="w">    </span><span class="nt">outs</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data/processed</span>
+
+<span class="w">  </span><span class="nt">train</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python src/train.py</span>
+<span class="w">    </span><span class="nt">deps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">src/train.py</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data/processed</span>
+<span class="w">    </span><span class="nt">outs</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">models/model.pkl</span>
+<span class="w">    </span><span class="nt">metrics</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics.json</span>
+</code></pre></div>
+
+<h3 id="dvc-in-our-architecture">DVC in Our Architecture</h3>
+<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────┐
+│              Data Layer                 │
+├─────────────────────────────────────────┤
+│  Raw Data ──→ DVC ──→ Processed Data    │
+│      │         │          │             │
+│      │         │          └──→ Training │
+│      │         │                        │
+│      │         └──→ Version Control     │
+│      │                                  │
+│      └──→ Remote Storage (S3/GCS)       │
+└─────────────────────────────────────────┘
+</code></pre></div>
+
+<h3 id="official-documentation">Official Documentation</h3>
+<ul>
+<li><strong>Website</strong>: https://dvc.org/</li>
+<li><strong>GitHub</strong>: https://github.com/iterative/dvc</li>
+<li><strong>Documentation</strong>: https://dvc.org/doc</li>
+</ul>
+<hr />
+<h2 id="model-versioning-experiment-tracking-mlflow">Model Versioning &amp; Experiment Tracking (MLflow)</h2>
+<h3 id="what-is-mlflow">What is MLflow?</h3>
+<p><strong>MLflow</strong> is an open-source platform for managing the ML lifecycle, including experimentation, reproducibility, deployment, and model registry.</p>
+<h3 id="core-components">Core Components</h3>
+<h4 id="1-mlflow-tracking">1. MLflow Tracking</h4>
+<ul>
+<li>Log parameters, metrics, and artifacts</li>
+<li>Compare experiments and runs</li>
+<li>Organize experiments by project</li>
+</ul>
+<h4 id="2-mlflow-models">2. MLflow Models</h4>
+<ul>
+<li>Standard format for packaging ML models</li>
+<li>Multiple deployment options (REST API, batch, streaming)</li>
+</ul>
+<h4 id="3-mlflow-model-registry">3. MLflow Model Registry</h4>
+<ul>
+<li>Central model store with versioning</li>
+<li>Stage transitions (staging, production, archived)</li>
+<li>Model lineage and annotations</li>
+</ul>
+<h4 id="4-mlflow-projects">4. MLflow Projects</h4>
+<ul>
+<li>Reusable and reproducible ML code</li>
+<li>Define dependencies and entry points</li>
+</ul>
+<h3 id="advantages_1">Advantages ✅</h3>
+<ul>
+<li><strong>Comprehensive Tracking</strong>: End-to-end experiment management</li>
+<li><strong>Model Registry</strong>: Centralized model versioning and deployment</li>
+<li><strong>Technology Agnostic</strong>: Works with any ML library</li>
+<li><strong>UI Interface</strong>: Rich web interface for experiment comparison</li>
+<li><strong>REST API</strong>: Programmatic access to all features</li>
+</ul>
+<h3 id="disadvantages_1">Disadvantages ❌</h3>
+<ul>
+<li><strong>Complexity</strong>: Can be overkill for simple projects</li>
+<li><strong>Resource Usage</strong>: Requires dedicated infrastructure</li>
+<li><strong>Learning Curve</strong>: Multiple concepts to understand</li>
+</ul>
+<h3 id="usage-example_1">Usage Example</h3>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">mlflow</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mlflow.sklearn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span>
+
+<span class="c1"># Start MLflow experiment</span>
+<span class="n">mlflow</span><span class="o">.</span><span class="n">set_experiment</span><span class="p">(</span><span class="s2">&quot;iris_classification&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">start_run</span><span class="p">():</span>
+    <span class="c1"># Log parameters</span>
+    <span class="n">n_estimators</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">max_depth</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_param</span><span class="p">(</span><span class="s2">&quot;n_estimators&quot;</span><span class="p">,</span> <span class="n">n_estimators</span><span class="p">)</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_param</span><span class="p">(</span><span class="s2">&quot;max_depth&quot;</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">)</span>
+
+    <span class="c1"># Train model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span>
+        <span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">,</span>
+        <span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth</span>
+    <span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+    <span class="c1"># Log metrics</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&quot;accuracy&quot;</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">)</span>
+
+    <span class="c1"># Log model</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span>
+        <span class="n">model</span><span class="p">,</span>
+        <span class="s2">&quot;model&quot;</span><span class="p">,</span>
+        <span class="n">registered_model_name</span><span class="o">=</span><span class="s2">&quot;iris_classifier&quot;</span>
+    <span class="p">)</span>
+</code></pre></div>
+
+<h3 id="mlflow-ui-features">MLflow UI Features</h3>
+<p>The MLflow UI provides:
+- <strong>Experiment Comparison</strong>: Side-by-side parameter and metric comparison
+- <strong>Run Details</strong>: Detailed view of individual experiments
+- <strong>Model Registry</strong>: Model version management interface
+- <strong>Artifact Browser</strong>: View and download logged artifacts</p>
+<h3 id="mlflow-in-our-architecture">MLflow in Our Architecture</h3>
+<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────┐
+│            Training Layer               │
+├─────────────────────────────────────────┤
+│  Training Script ──→ MLflow Tracking    │
+│         │               │               │
+│         │               ├──→ Metrics    │
+│         │               ├──→ Parameters │
+│         │               └──→ Artifacts  │
+│         │                               │
+│         └──→ MLflow Registry ──→ Models │
+│                         │               │
+│                         └──→ Serving    │
+└─────────────────────────────────────────┘
+</code></pre></div>
+
+<h3 id="official-documentation_1">Official Documentation</h3>
+<ul>
+<li><strong>Website</strong>: https://mlflow.org/</li>
+<li><strong>GitHub</strong>: https://github.com/mlflow/mlflow</li>
+<li><strong>Documentation</strong>: https://mlflow.org/docs/latest/index.html</li>
+</ul>
+<hr />
+<h2 id="model-serving-fastapi">Model Serving (FastAPI)</h2>
+<h3 id="what-is-fastapi">What is FastAPI?</h3>
+<p><strong>FastAPI</strong> is a modern, fast web framework for building APIs with Python 3.7+ based on standard Python type hints.</p>
+<h3 id="key-features_1">Key Features</h3>
+<h4 id="advantages_2">Advantages ✅</h4>
+<ul>
+<li><strong>High Performance</strong>: One of the fastest Python frameworks</li>
+<li><strong>Automatic Documentation</strong>: Interactive API docs (Swagger UI)</li>
+<li><strong>Type Safety</strong>: Built-in validation with Python type hints</li>
+<li><strong>Async Support</strong>: Native async/await support</li>
+<li><strong>Easy Testing</strong>: Built-in testing support</li>
+<li><strong>Standards-based</strong>: OpenAPI and JSON Schema compliance</li>
+</ul>
+<h4 id="disadvantages_2">Disadvantages ❌</h4>
+<ul>
+<li><strong>Relatively New</strong>: Smaller ecosystem compared to Flask/Django</li>
+<li><strong>Learning Curve</strong>: Type hints and async concepts</li>
+<li><strong>Dependency Management</strong>: Can become complex with many dependencies</li>
+</ul>
+<h3 id="usage-example_2">Usage Example</h3>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">HTTPException</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;ML Model API&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;API for serving ML models&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;1.0.0&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Load model</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;models/iris_model.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PredictionRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">sepal_length</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">sepal_width</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">petal_length</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">petal_width</span><span class="p">:</span> <span class="nb">float</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PredictionResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">prediction</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">probabilities</span><span class="p">:</span> <span class="nb">dict</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/predict/iris&quot;</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">PredictionResponse</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">predict_iris</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">PredictionRequest</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Prepare features</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">sepal_length</span><span class="p">,</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">sepal_width</span><span class="p">,</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">petal_length</span><span class="p">,</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">petal_width</span>
+        <span class="p">]])</span>
+
+        <span class="c1"># Make prediction</span>
+        <span class="n">prediction</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">features</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">probabilities</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">features</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">class_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;setosa&#39;</span><span class="p">,</span> <span class="s1">&#39;versicolor&#39;</span><span class="p">,</span> <span class="s1">&#39;virginica&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">PredictionResponse</span><span class="p">(</span>
+            <span class="n">prediction</span><span class="o">=</span><span class="n">class_names</span><span class="p">[</span><span class="n">prediction</span><span class="p">],</span>
+            <span class="n">confidence</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">probabilities</span><span class="p">)),</span>
+            <span class="n">probabilities</span><span class="o">=</span><span class="p">{</span>
+                <span class="n">class_names</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span> <span class="nb">float</span><span class="p">(</span><span class="n">prob</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">probabilities</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/health&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">health_check</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;healthy&quot;</span><span class="p">}</span>
+</code></pre></div>
+
+<h3 id="fastapi-features">FastAPI Features</h3>
+<h4 id="automatic-documentation">Automatic Documentation</h4>
+<ul>
+<li><strong>Swagger UI</strong>: Interactive API documentation at <code>/docs</code></li>
+<li><strong>ReDoc</strong>: Alternative documentation at <code>/redoc</code></li>
+<li><strong>OpenAPI Schema</strong>: Machine-readable API specification</li>
+</ul>
+<h4 id="requestresponse-models">Request/Response Models</h4>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">validator</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ModelInput</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">feature1</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">feature2</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="nd">@validator</span><span class="p">(</span><span class="s1">&#39;feature1&#39;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_feature1</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;feature1 must be positive&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">v</span>
+</code></pre></div>
+
+<h3 id="fastapi-in-our-architecture">FastAPI in Our Architecture</h3>
+<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────┐
+│             Serving Layer               │
+├─────────────────────────────────────────┤
+│  Client Request ──→ FastAPI Router      │
+│         │               │               │
+│         │               ├──→ Validation │
+│         │               ├──→ Model Load │
+│         │               ├──→ Prediction │
+│         │               └──→ Response   │
+│         │                               │
+│         └──→ Monitoring ──→ Metrics     │
+└─────────────────────────────────────────┘
+</code></pre></div>
+
+<h3 id="official-documentation_2">Official Documentation</h3>
+<ul>
+<li><strong>Website</strong>: https://fastapi.tiangolo.com/</li>
+<li><strong>GitHub</strong>: https://github.com/tiangolo/fastapi</li>
+<li><strong>Documentation</strong>: https://fastapi.tiangolo.com/</li>
+</ul>
+<hr />
+<h2 id="monitoring-observability-prometheus-grafana">Monitoring &amp; Observability (Prometheus + Grafana)</h2>
+<h3 id="what-is-prometheus">What is Prometheus?</h3>
+<p><strong>Prometheus</strong> is an open-source monitoring and alerting toolkit designed for reliability and scalability.</p>
+<h3 id="what-is-grafana">What is Grafana?</h3>
+<p><strong>Grafana</strong> is an open-source analytics and interactive visualization web application.</p>
+<h3 id="prometheus-features">Prometheus Features</h3>
+<h4 id="advantages_3">Advantages ✅</h4>
+<ul>
+<li><strong>Time Series Database</strong>: Efficient storage and querying</li>
+<li><strong>Pull-based Model</strong>: Scrapes metrics from targets</li>
+<li><strong>PromQL</strong>: Powerful query language</li>
+<li><strong>Service Discovery</strong>: Automatic target discovery</li>
+<li><strong>Alerting</strong>: Built-in alerting capabilities</li>
+</ul>
+<h4 id="disadvantages_3">Disadvantages ❌</h4>
+<ul>
+<li><strong>Local Storage</strong>: Not suitable for long-term storage</li>
+<li><strong>Complexity</strong>: Can be complex to set up initially</li>
+<li><strong>Resource Usage</strong>: Memory intensive for large deployments</li>
+</ul>
+<h3 id="grafana-features">Grafana Features</h3>
+<h4 id="advantages_4">Advantages ✅</h4>
+<ul>
+<li><strong>Rich Visualizations</strong>: Multiple chart types and dashboards</li>
+<li><strong>Data Source Agnostic</strong>: Supports many data sources</li>
+<li><strong>Alerting</strong>: Advanced alerting capabilities</li>
+<li><strong>User Management</strong>: Role-based access control</li>
+<li><strong>Plugins</strong>: Extensive plugin ecosystem</li>
+</ul>
+<h4 id="disadvantages_4">Disadvantages ❌</h4>
+<ul>
+<li><strong>Performance</strong>: Can be slow with large datasets</li>
+<li><strong>Complexity</strong>: Dashboard creation can be complex</li>
+<li><strong>Resource Usage</strong>: Memory and CPU intensive</li>
+</ul>
+<h3 id="usage-example_3">Usage Example</h3>
+<h4 id="prometheus-configuration">Prometheus Configuration</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># prometheus.yml</span>
+<span class="nt">global</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">scrape_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span>
+
+<span class="nt">scrape_configs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;mlops-api&#39;</span>
+<span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;api:8000&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">metrics_path</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;/metrics&#39;</span>
+<span class="w">    </span><span class="nt">scrape_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;prometheus&#39;</span>
+<span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;localhost:9090&#39;</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+
+<h4 id="python-metrics-collection">Python Metrics Collection</h4>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">prometheus_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">Histogram</span><span class="p">,</span> <span class="n">Gauge</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="c1"># Define metrics</span>
+<span class="n">PREDICTION_COUNTER</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
+    <span class="s1">&#39;ml_predictions_total&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Total number of predictions&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;model_name&#39;</span><span class="p">,</span> <span class="s1">&#39;model_version&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">PREDICTION_LATENCY</span> <span class="o">=</span> <span class="n">Histogram</span><span class="p">(</span>
+    <span class="s1">&#39;ml_prediction_duration_seconds&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Time spent on predictions&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;model_name&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">MODEL_ACCURACY</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span>
+    <span class="s1">&#39;ml_model_accuracy&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Current model accuracy&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;model_name&#39;</span><span class="p">,</span> <span class="s1">&#39;model_version&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/predict&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">PredictionRequest</span><span class="p">):</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="c1"># Make prediction</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
+
+    <span class="c1"># Record metrics</span>
+    <span class="n">PREDICTION_COUNTER</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span>
+        <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;iris&#39;</span><span class="p">,</span>
+        <span class="n">model_version</span><span class="o">=</span><span class="s1">&#39;v1.0&#39;</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">inc</span><span class="p">()</span>
+
+    <span class="n">PREDICTION_LATENCY</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span>
+        <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;iris&#39;</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+
+<h4 id="grafana-dashboard-configuration">Grafana Dashboard Configuration</h4>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;dashboard&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MLOps Monitoring&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;panels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Prediction Rate&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;graph&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rate(ml_predictions_total[5m])&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{model_name}}&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Prediction Latency&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;graph&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;histogram_quantile(0.95, ml_prediction_duration_seconds_bucket)&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;95th percentile&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="key-metrics-for-ml-systems">Key Metrics for ML Systems</h3>
+<h4 id="business-metrics">Business Metrics</h4>
+<ul>
+<li><strong>Prediction Volume</strong>: Number of predictions per time unit</li>
+<li><strong>Response Time</strong>: API response latency</li>
+<li><strong>Error Rate</strong>: Failed predictions percentage</li>
+<li><strong>User Engagement</strong>: API usage patterns</li>
+</ul>
+<h4 id="model-performance-metrics">Model Performance Metrics</h4>
+<ul>
+<li><strong>Accuracy</strong>: Model accuracy over time</li>
+<li><strong>Data Drift</strong>: Input data distribution changes</li>
+<li><strong>Model Drift</strong>: Prediction distribution changes</li>
+<li><strong>Feature Importance</strong>: Changes in feature contributions</li>
+</ul>
+<h4 id="infrastructure-metrics">Infrastructure Metrics</h4>
+<ul>
+<li><strong>CPU/Memory Usage</strong>: Resource utilization</li>
+<li><strong>Disk I/O</strong>: Model loading performance</li>
+<li><strong>Network</strong>: API traffic patterns</li>
+<li><strong>Container Health</strong>: Service availability</li>
+</ul>
+<h3 id="monitoring-architecture">Monitoring Architecture</h3>
+<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────┐
+│          Monitoring Layer               │
+├─────────────────────────────────────────┤
+│  Application ──→ Prometheus ──→ Grafana │
+│      │              │            │     │
+│      ├──→ Metrics   │            │     │
+│      ├──→ Logs      │            │     │
+│      └──→ Traces    │            │     │
+│                     │            │     │
+│                     ├──→ Alerts  │     │
+│                     └──→ Storage │     │
+│                                  │     │
+│                          ┌───────┘     │
+│                          │             │
+│                          └──→ Dashboards│
+└─────────────────────────────────────────┘
+</code></pre></div>
+
+<h3 id="official-documentation_3">Official Documentation</h3>
+<ul>
+<li><strong>Prometheus</strong>: https://prometheus.io/docs/</li>
+<li><strong>Grafana</strong>: https://grafana.com/docs/grafana/latest/</li>
+</ul>
+<hr />
+<h2 id="cicd-pipelines-github-actions">CI/CD Pipelines (GitHub Actions)</h2>
+<h3 id="what-is-github-actions">What is GitHub Actions?</h3>
+<p><strong>GitHub Actions</strong> is a CI/CD platform that allows you to automate your build, test, and deployment pipeline directly from your GitHub repository.</p>
+<h3 id="key-concepts">Key Concepts</h3>
+<h4 id="workflows">Workflows</h4>
+<ul>
+<li>YAML files that define automated processes</li>
+<li>Triggered by events (push, pull request, schedule)</li>
+<li>Composed of one or more jobs</li>
+</ul>
+<h4 id="jobs">Jobs</h4>
+<ul>
+<li>Set of steps that execute on the same runner</li>
+<li>Can run in parallel or sequentially</li>
+<li>Each job runs in a fresh virtual environment</li>
+</ul>
+<h4 id="actions">Actions</h4>
+<ul>
+<li>Reusable units of code</li>
+<li>Can be custom or from GitHub Marketplace</li>
+<li>Input/output parameters for flexibility</li>
+</ul>
+<h3 id="advantages_5">Advantages ✅</h3>
+<ul>
+<li><strong>Native Integration</strong>: Built into GitHub ecosystem</li>
+<li><strong>Extensive Marketplace</strong>: Thousands of pre-built actions</li>
+<li><strong>Matrix Builds</strong>: Test across multiple environments</li>
+<li><strong>Secrets Management</strong>: Secure environment variables</li>
+<li><strong>Free Tier</strong>: Generous free usage for public repos</li>
+</ul>
+<h3 id="disadvantages_5">Disadvantages ❌</h3>
+<ul>
+<li><strong>GitHub Dependency</strong>: Locked to GitHub platform</li>
+<li><strong>Learning Curve</strong>: YAML syntax and concepts</li>
+<li><strong>Cost</strong>: Can be expensive for private repos with heavy usage</li>
+<li><strong>Limited Runners</strong>: Resource constraints on hosted runners</li>
+</ul>
+<h3 id="usage-example_4">Usage Example</h3>
+<h4 id="basic-ml-pipeline">Basic ML Pipeline</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># .github/workflows/ml-pipeline.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ML Pipeline</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">main</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">main</span><span class="w"> </span><span class="p p-Indicator">]</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">test</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+
+<span class="w">    </span><span class="nt">strategy</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">matrix</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">3.8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3.9</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v3</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python ${{ matrix.python-version }}</span>
+<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v3</span>
+<span class="w">      </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ matrix.python-version }}</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">python -m pip install --upgrade pip</span>
+<span class="w">        </span><span class="no">pip install -r requirements.txt</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run tests</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">pytest tests/ -v --cov=src</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run data quality checks</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">python scripts/data_validation.py</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Train models</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">python scripts/train_all_models.py</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Model validation</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">python scripts/model_validation.py</span>
+
+<span class="w">  </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.ref == &#39;refs/heads/main&#39;</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v3</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build Docker image</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">docker build -t mlops-api .</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy to staging</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">docker-compose -f docker-compose.staging.yml up -d</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run integration tests</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">python tests/integration_tests.py</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy to production</span>
+<span class="w">      </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">success()</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">echo &quot;Deploying to production&quot;</span>
+<span class="w">        </span><span class="no"># Production deployment commands</span>
+</code></pre></div>
+
+<h4 id="advanced-ml-workflow">Advanced ML Workflow</h4>
+<div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Advanced ML Pipeline</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">main</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">paths</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;models/**&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;data/**&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;api/**&#39;</span><span class="p p-Indicator">]</span>
+
+<span class="nt">env</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">MLFLOW_TRACKING_URI</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.MLFLOW_TRACKING_URI }}</span>
+<span class="w">  </span><span class="nt">AWS_ACCESS_KEY_ID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AWS_ACCESS_KEY_ID }}</span>
+<span class="w">  </span><span class="nt">AWS_SECRET_ACCESS_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AWS_SECRET_ACCESS_KEY }}</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">data-validation</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v3</span>
+<span class="w">      </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">lfs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DVC Setup</span>
+<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iterative/setup-dvc@v1</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Data validation</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">dvc pull</span>
+<span class="w">        </span><span class="no">python scripts/validate_data.py</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upload validation report</span>
+<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v3</span>
+<span class="w">      </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data-validation-report</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reports/data_validation.html</span>
+
+<span class="w">  </span><span class="nt">model-training</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data-validation</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v3</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Train models</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">python scripts/train_all_models.py</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Model evaluation</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">python scripts/evaluate_models.py</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Register models</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">python scripts/register_models.py</span>
+
+<span class="w">  </span><span class="nt">security-scan</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v3</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run security scan</span>
+<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pypa/gh-action-pip-audit@v1.0.0</span>
+<span class="w">      </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">inputs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">requirements.txt</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Container security scan</span>
+<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aquasecurity/trivy-action@master</span>
+<span class="w">      </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">image-ref</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;mlops-api:latest&#39;</span>
+<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;sarif&#39;</span>
+<span class="w">        </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;trivy-results.sarif&#39;</span>
+
+<span class="w">  </span><span class="nt">performance-testing</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v3</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Start services</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">docker-compose up -d</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Load testing</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">pip install locust</span>
+<span class="w">        </span><span class="no">locust -f tests/load_test.py --headless -u 50 -r 5 -t 300s --host http://localhost:8000</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cleanup</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">docker-compose down</span>
+</code></pre></div>
+
+<h3 id="github-actions-in-our-architecture">GitHub Actions in Our Architecture</h3>
+<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────┐
+│             CI/CD Layer                 │
+├─────────────────────────────────────────┤
+│  Code Push ──→ GitHub Actions           │
+│      │             │                   │
+│      │             ├──→ Test Stage     │
+│      │             ├──→ Build Stage    │
+│      │             ├──→ Deploy Stage   │
+│      │             └──→ Monitor Stage  │
+│      │                                 │
+│      └──→ Notifications ──→ Slack/Email│
+└─────────────────────────────────────────┘
+</code></pre></div>
+
+<h3 id="best-practices">Best Practices</h3>
+<h4 id="security">Security</h4>
+<ul>
+<li>Use secrets for sensitive data</li>
+<li>Limit workflow permissions</li>
+<li>Pin action versions</li>
+<li>Review third-party actions</li>
+</ul>
+<h4 id="performance">Performance</h4>
+<ul>
+<li>Use caching for dependencies</li>
+<li>Minimize workflow runtime</li>
+<li>Use self-hosted runners for heavy workloads</li>
+<li>Parallelize independent jobs</li>
+</ul>
+<h4 id="reliability">Reliability</h4>
+<ul>
+<li>Add retry mechanisms</li>
+<li>Use status checks</li>
+<li>Implement proper error handling</li>
+<li>Monitor workflow performance</li>
+</ul>
+<h3 id="official-documentation_4">Official Documentation</h3>
+<ul>
+<li><strong>Website</strong>: https://github.com/features/actions</li>
+<li><strong>Documentation</strong>: https://docs.github.com/en/actions</li>
+</ul>
+<hr />
+<h2 id="containerization-docker">Containerization (Docker)</h2>
+<h3 id="what-is-docker">What is Docker?</h3>
+<p><strong>Docker</strong> is a platform that enables developers to package applications and their dependencies into lightweight, portable containers.</p>
+<h3 id="key-concepts_1">Key Concepts</h3>
+<h4 id="containers">Containers</h4>
+<ul>
+<li>Lightweight, standalone packages</li>
+<li>Include application code, runtime, libraries, and dependencies</li>
+<li>Isolated from the host system</li>
+</ul>
+<h4 id="images">Images</h4>
+<ul>
+<li>Read-only templates for creating containers</li>
+<li>Built using Dockerfiles</li>
+<li>Can be stored in registries (Docker Hub, ECR, GCR)</li>
+</ul>
+<h4 id="dockerfile">Dockerfile</h4>
+<ul>
+<li>Text file with instructions to build images</li>
+<li>Defines the application environment step by step</li>
+</ul>
+<h3 id="advantages_6">Advantages ✅</h3>
+<ul>
+<li><strong>Consistency</strong>: Same environment across dev/staging/prod</li>
+<li><strong>Portability</strong>: Runs anywhere Docker is installed</li>
+<li><strong>Scalability</strong>: Easy horizontal scaling</li>
+<li><strong>Resource Efficiency</strong>: Lower overhead than VMs</li>
+<li><strong>Isolation</strong>: Process and filesystem isolation</li>
+</ul>
+<h3 id="disadvantages_6">Disadvantages ❌</h3>
+<ul>
+<li><strong>Complexity</strong>: Additional abstraction layer</li>
+<li><strong>Storage Overhead</strong>: Images can be large</li>
+<li><strong>Security Concerns</strong>: Shared kernel with host</li>
+<li><strong>Learning Curve</strong>: New concepts and commands</li>
+</ul>
+<h3 id="usage-example_5">Usage Example</h3>
+<h4 id="dockerfile-for-ml-api">Dockerfile for ML API</h4>
+<div class="codehilite"><pre><span></span><code><span class="c"># Dockerfile</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">python:3.9-slim</span>
+
+<span class="c"># Set working directory</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+
+<span class="c"># Install system dependencies</span>
+<span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>gcc<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
+
+<span class="c"># Copy requirements first for better caching</span>
+<span class="k">COPY</span><span class="w"> </span>requirements.txt<span class="w"> </span>.
+
+<span class="c"># Install Python dependencies</span>
+<span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-cache-dir<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="c"># Copy application code</span>
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+
+<span class="c"># Create non-root user</span>
+<span class="k">RUN</span><span class="w"> </span>useradd<span class="w"> </span>--create-home<span class="w"> </span>--shell<span class="w"> </span>/bin/bash<span class="w"> </span>mlops
+<span class="k">USER</span><span class="w"> </span><span class="s">mlops</span>
+
+<span class="c"># Expose port</span>
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">8000</span>
+
+<span class="c"># Health check</span>
+<span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>10s<span class="w"> </span>--start-period<span class="o">=</span>5s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>CMD<span class="w"> </span>curl<span class="w"> </span>-f<span class="w"> </span>http://localhost:8000/health<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+
+<span class="c"># Start application</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;uvicorn&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;api.main:app&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--port&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;8000&quot;</span><span class="p">]</span>
+</code></pre></div>
+
+<h4 id="multi-stage-build">Multi-stage Build</h4>
+<div class="codehilite"><pre><span></span><code><span class="c"># Multi-stage Dockerfile for optimization</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">python:3.9</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="s">builder</span>
+
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+
+<span class="c"># Install build dependencies</span>
+<span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-cache-dir<span class="w"> </span>poetry
+
+<span class="c"># Copy dependency files</span>
+<span class="k">COPY</span><span class="w"> </span>pyproject.toml<span class="w"> </span>poetry.lock<span class="w"> </span>./
+
+<span class="c"># Install dependencies</span>
+<span class="k">RUN</span><span class="w"> </span>poetry<span class="w"> </span>config<span class="w"> </span>virtualenvs.create<span class="w"> </span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>poetry<span class="w"> </span>install<span class="w"> </span>--no-dev<span class="w"> </span>--no-interaction<span class="w"> </span>--no-ansi
+
+<span class="c"># Production stage</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">python:3.9-slim</span>
+
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+
+<span class="c"># Copy installed packages from builder</span>
+<span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/usr/local/lib/python3.9/site-packages<span class="w"> </span>/usr/local/lib/python3.9/site-packages
+<span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/usr/local/bin<span class="w"> </span>/usr/local/bin
+
+<span class="c"># Copy application</span>
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+
+<span class="c"># Run as non-root</span>
+<span class="k">RUN</span><span class="w"> </span>useradd<span class="w"> </span>--create-home<span class="w"> </span>mlops
+<span class="k">USER</span><span class="w"> </span><span class="s">mlops</span>
+
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">8000</span>
+
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;uvicorn&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;api.main:app&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--port&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;8000&quot;</span><span class="p">]</span>
+</code></pre></div>
+
+<h4 id="docker-compose-for-mlops-stack">Docker Compose for MLOps Stack</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># docker-compose.yml</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.8&#39;</span>
+
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">api</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8000:8000&quot;</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MLFLOW_TRACKING_URI=http://mlflow:5000</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PROMETHEUS_MULTIPROC_DIR=/tmp</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mlflow</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./models:/app/models</span>
+<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;curl&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;-f&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;http://localhost:8000/health&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+
+<span class="w">  </span><span class="nt">mlflow</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mlflow/mlflow:latest</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;5000:5000&quot;</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BACKEND_STORE_URI=sqlite:///mlflow.db</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEFAULT_ARTIFACT_ROOT=/mlflow/artifacts</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mlflow_data:/mlflow</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">      </span><span class="no">mlflow server</span>
+<span class="w">      </span><span class="no">--backend-store-uri sqlite:///mlflow.db</span>
+<span class="w">      </span><span class="no">--default-artifact-root /mlflow/artifacts</span>
+<span class="w">      </span><span class="no">--host 0.0.0.0</span>
+<span class="w">      </span><span class="no">--port 5000</span>
+
+<span class="w">  </span><span class="nt">prometheus</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prom/prometheus:latest</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;9090:9090&quot;</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus_data:/prometheus</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;--config.file=/etc/prometheus/prometheus.yml&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;--storage.tsdb.path=/prometheus&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;--web.console.libraries=/usr/share/prometheus/console_libraries&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;--web.console.templates=/usr/share/prometheus/consoles&#39;</span>
+
+<span class="w">  </span><span class="nt">grafana</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana/grafana:latest</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;3000:3000&quot;</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GF_SECURITY_ADMIN_PASSWORD=admin123</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana_data:/var/lib/grafana</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards</span>
+
+<span class="w">  </span><span class="nt">jupyter</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jupyter/datascience-notebook:latest</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8888:8888&quot;</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">JUPYTER_ENABLE_LAB=yes</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./notebooks:/home/jovyan/work</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">start-notebook.sh --NotebookApp.token=&#39;&#39;</span>
+
+<span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">mlflow_data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">prometheus_data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">grafana_data</span><span class="p">:</span>
+</code></pre></div>
+
+<h3 id="docker-in-our-architecture">Docker in Our Architecture</h3>
+<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────┐
+│          Container Layer                │
+├─────────────────────────────────────────┤
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐  │
+│  │   API   │  │ MLflow  │  │Prometheus│  │
+│  │Container│  │Container│  │Container │  │
+│  └─────────┘  └─────────┘  └─────────┘  │
+│       │            │            │       │
+│       └────────────┼────────────┘       │
+│                    │                    │
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐  │
+│  │ Grafana │  │ Jupyter │  │  Redis  │  │
+│  │Container│  │Container│  │Container│  │
+│  └─────────┘  └─────────┘  └─────────┘  │
+└─────────────────────────────────────────┘
+</code></pre></div>
+
+<h3 id="container-best-practices">Container Best Practices</h3>
+<h4 id="security_1">Security</h4>
+<ul>
+<li>Use official base images</li>
+<li>Run as non-root user</li>
+<li>Scan images for vulnerabilities</li>
+<li>Keep images updated</li>
+<li>Use multi-stage builds</li>
+</ul>
+<h4 id="performance_1">Performance</h4>
+<ul>
+<li>Minimize layers</li>
+<li>Use .dockerignore</li>
+<li>Leverage build cache</li>
+<li>Optimize image size</li>
+<li>Use specific tags</li>
+</ul>
+<h4 id="reliability_1">Reliability</h4>
+<ul>
+<li>Implement health checks</li>
+<li>Set resource limits</li>
+<li>Use restart policies</li>
+<li>Monitor container metrics</li>
+<li>Log to stdout/stderr</li>
+</ul>
+<h3 id="official-documentation_5">Official Documentation</h3>
+<ul>
+<li><strong>Website</strong>: https://www.docker.com/</li>
+<li><strong>Documentation</strong>: https://docs.docker.com/</li>
+</ul>
+<hr />
+<h2 id="data-drift-detection-evidently-ai">Data Drift Detection (Evidently AI)</h2>
+<h3 id="what-is-evidently-ai">What is Evidently AI?</h3>
+<p><strong>Evidently AI</strong> is an open-source Python library for evaluating, testing, and monitoring ML model quality throughout the model lifecycle.</p>
+<h3 id="key-capabilities">Key Capabilities</h3>
+<h4 id="data-drift-detection">Data Drift Detection</h4>
+<ul>
+<li>Statistical tests for feature distribution changes</li>
+<li>Visual drift analysis and reporting</li>
+<li>Automatic drift detection algorithms</li>
+</ul>
+<h4 id="model-performance-monitoring">Model Performance Monitoring</h4>
+<ul>
+<li>Classification and regression metrics</li>
+<li>Performance degradation detection</li>
+<li>Target drift analysis</li>
+</ul>
+<h4 id="data-quality-assessment">Data Quality Assessment</h4>
+<ul>
+<li>Missing values analysis</li>
+<li>Data integrity checks</li>
+<li>Feature correlation analysis</li>
+</ul>
+<h3 id="advantages_7">Advantages ✅</h3>
+<ul>
+<li><strong>Comprehensive Analysis</strong>: Multiple drift detection methods</li>
+<li><strong>Visual Reports</strong>: Rich HTML reports and dashboards</li>
+<li><strong>Real-time Monitoring</strong>: Integration with monitoring systems</li>
+<li><strong>No Target Required</strong>: Works without ground truth labels</li>
+<li><strong>Easy Integration</strong>: Simple Python API</li>
+</ul>
+<h3 id="disadvantages_7">Disadvantages ❌</h3>
+<ul>
+<li><strong>Resource Intensive</strong>: Can be slow with large datasets</li>
+<li><strong>Learning Curve</strong>: Understanding statistical concepts</li>
+<li><strong>Memory Usage</strong>: High memory requirements for large datasets</li>
+<li><strong>Limited Customization</strong>: Fixed report templates</li>
+</ul>
+<h3 id="usage-example_6">Usage Example</h3>
+<h4 id="basic-drift-detection">Basic Drift Detection</h4>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">evidently</span><span class="w"> </span><span class="kn">import</span> <span class="n">ColumnMapping</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">evidently.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">Report</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">evidently.metric_suite</span><span class="w"> </span><span class="kn">import</span> <span class="n">MetricSuite</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">evidently.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataDriftMetric</span><span class="p">,</span> <span class="n">DatasetDriftMetric</span>
+
+<span class="c1"># Load reference and current data</span>
+<span class="n">reference_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/reference.csv&#39;</span><span class="p">)</span>
+<span class="n">current_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/current.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># Define column mapping</span>
+<span class="n">column_mapping</span> <span class="o">=</span> <span class="n">ColumnMapping</span><span class="p">(</span>
+    <span class="n">target</span><span class="o">=</span><span class="s1">&#39;target&#39;</span><span class="p">,</span>
+    <span class="n">prediction</span><span class="o">=</span><span class="s1">&#39;prediction&#39;</span><span class="p">,</span>
+    <span class="n">numerical_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;feature1&#39;</span><span class="p">,</span> <span class="s1">&#39;feature2&#39;</span><span class="p">,</span> <span class="s1">&#39;feature3&#39;</span><span class="p">],</span>
+    <span class="n">categorical_features</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;category1&#39;</span><span class="p">,</span> <span class="s1">&#39;category2&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Create drift report</span>
+<span class="n">report</span> <span class="o">=</span> <span class="n">Report</span><span class="p">(</span><span class="n">metrics</span><span class="o">=</span><span class="p">[</span>
+    <span class="n">DatasetDriftMetric</span><span class="p">(),</span>
+    <span class="n">DataDriftMetric</span><span class="p">()</span>
+<span class="p">])</span>
+
+<span class="c1"># Generate report</span>
+<span class="n">report</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+    <span class="n">reference_data</span><span class="o">=</span><span class="n">reference_data</span><span class="p">,</span>
+    <span class="n">current_data</span><span class="o">=</span><span class="n">current_data</span><span class="p">,</span>
+    <span class="n">column_mapping</span><span class="o">=</span><span class="n">column_mapping</span>
+<span class="p">)</span>
+
+<span class="c1"># Save report</span>
+<span class="n">report</span><span class="o">.</span><span class="n">save_html</span><span class="p">(</span><span class="s1">&#39;reports/data_drift_report.html&#39;</span><span class="p">)</span>
+
+<span class="c1"># Get drift results</span>
+<span class="n">drift_results</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+<span class="n">dataset_drift</span> <span class="o">=</span> <span class="n">drift_results</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;dataset_drift&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dataset drift detected: </span><span class="si">{</span><span class="n">dataset_drift</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<h4 id="model-performance-monitoring_1">Model Performance Monitoring</h4>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">evidently.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassificationPerformanceMetric</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">evidently.metric_suite</span><span class="w"> </span><span class="kn">import</span> <span class="n">MetricSuite</span>
+
+<span class="c1"># Create performance report</span>
+<span class="n">report</span> <span class="o">=</span> <span class="n">Report</span><span class="p">(</span><span class="n">metrics</span><span class="o">=</span><span class="p">[</span>
+    <span class="n">ClassificationPerformanceMetric</span><span class="p">(),</span>
+    <span class="n">DataDriftMetric</span><span class="p">(),</span>
+    <span class="n">DatasetDriftMetric</span><span class="p">()</span>
+<span class="p">])</span>
+
+<span class="c1"># Run analysis</span>
+<span class="n">report</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+    <span class="n">reference_data</span><span class="o">=</span><span class="n">reference_data</span><span class="p">,</span>
+    <span class="n">current_data</span><span class="o">=</span><span class="n">current_data</span><span class="p">,</span>
+    <span class="n">column_mapping</span><span class="o">=</span><span class="n">column_mapping</span>
+<span class="p">)</span>
+
+<span class="c1"># Extract metrics</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span>
+<span class="n">precision</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;precision&#39;</span><span class="p">]</span>
+<span class="n">recall</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;recall&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current accuracy: </span><span class="si">{</span><span class="n">accuracy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current precision: </span><span class="si">{</span><span class="n">precision</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current recall: </span><span class="si">{</span><span class="n">recall</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<h4 id="real-time-monitoring-integration">Real-time Monitoring Integration</h4>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">evidently.monitors</span><span class="w"> </span><span class="kn">import</span> <span class="n">MonitoringService</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">evidently.options</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataDriftOptions</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DriftMonitor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_data</span><span class="p">,</span> <span class="n">column_mapping</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_data</span> <span class="o">=</span> <span class="n">reference_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">column_mapping</span> <span class="o">=</span> <span class="n">column_mapping</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_drift</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_batch</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check for drift in current batch&quot;&quot;&quot;</span>
+        <span class="n">report</span> <span class="o">=</span> <span class="n">Report</span><span class="p">(</span><span class="n">metrics</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">DatasetDriftMetric</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">DataDriftOptions</span><span class="p">(</span>
+                    <span class="n">drift_threshold</span><span class="o">=</span><span class="mf">0.3</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">])</span>
+
+        <span class="n">report</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="n">reference_data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_data</span><span class="p">,</span>
+            <span class="n">current_data</span><span class="o">=</span><span class="n">current_batch</span><span class="p">,</span>
+            <span class="n">column_mapping</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">column_mapping</span>
+        <span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+        <span class="n">drift_detected</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;dataset_drift&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">drift_detected</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_send_alert</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">drift_detected</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_send_alert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">results</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send drift alert&quot;&quot;&quot;</span>
+        <span class="n">alert</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="s1">&#39;drift_detected&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s1">&#39;drift_score&#39;</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;drift_score&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;affected_features&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="n">feature</span> <span class="k">for</span> <span class="n">feature</span><span class="p">,</span> <span class="n">details</span> <span class="ow">in</span>
+                <span class="n">results</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;drift_by_columns&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">details</span><span class="p">[</span><span class="s1">&#39;drift_detected&#39;</span><span class="p">]</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Send to monitoring system</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DRIFT ALERT: </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">alert</span><span class="p">,</span><span class="w"> </span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Usage</span>
+<span class="n">monitor</span> <span class="o">=</span> <span class="n">DriftMonitor</span><span class="p">(</span><span class="n">reference_data</span><span class="p">,</span> <span class="n">column_mapping</span><span class="p">)</span>
+
+<span class="c1"># Monitor incoming batches</span>
+<span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">data_stream</span><span class="p">:</span>
+    <span class="n">drift_detected</span> <span class="o">=</span> <span class="n">monitor</span><span class="o">.</span><span class="n">check_drift</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">drift_detected</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Drift detected! Consider retraining model.&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="drift-detection-methods">Drift Detection Methods</h3>
+<h4 id="statistical-tests">Statistical Tests</h4>
+<ul>
+<li><strong>Kolmogorov-Smirnov</strong>: Distribution comparison for numerical features</li>
+<li><strong>Chi-squared</strong>: Independence test for categorical features</li>
+<li><strong>Jensen-Shannon</strong>: Divergence-based drift detection</li>
+<li><strong>Population Stability Index</strong>: Stability measurement</li>
+</ul>
+<h4 id="visualization">Visualization</h4>
+<ul>
+<li><strong>Distribution Plots</strong>: Feature distribution comparison</li>
+<li><strong>Drift Score Heatmap</strong>: Feature-wise drift visualization</li>
+<li><strong>Correlation Analysis</strong>: Feature relationship changes</li>
+<li><strong>Time Series Plots</strong>: Drift over time</li>
+</ul>
+<h3 id="evidently-in-our-architecture">Evidently in Our Architecture</h3>
+<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────┐
+│          Monitoring Layer               │
+├─────────────────────────────────────────┤
+│  Incoming Data ──→ Evidently AI         │
+│         │               │               │
+│         │               ├──→ Drift Check│
+│         │               ├──→ Reports    │
+│         │               └──→ Alerts     │
+│         │                               │
+│         └──→ Model Retraining ←─────────│
+│                     │                   │
+│                     └──→ MLflow         │
+└─────────────────────────────────────────┘
+</code></pre></div>
+
+<h3 id="integration-with-mlops-pipeline">Integration with MLOps Pipeline</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Automated drift detection in MLOps pipeline</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MLOpsPipeline</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drift_monitor</span> <span class="o">=</span> <span class="n">DriftMonitor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_trainer</span> <span class="o">=</span> <span class="n">ModelTrainer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_deployer</span> <span class="o">=</span> <span class="n">ModelDeployer</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_batch</span><span class="p">):</span>
+        <span class="c1"># Check for drift</span>
+        <span class="n">drift_detected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">drift_monitor</span><span class="o">.</span><span class="n">check_drift</span><span class="p">(</span><span class="n">data_batch</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">drift_detected</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Drift detected. Initiating retraining...&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Retrain model</span>
+            <span class="n">new_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_trainer</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">data_batch</span><span class="p">)</span>
+
+            <span class="c1"># Validate new model</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_model</span><span class="p">(</span><span class="n">new_model</span><span class="p">):</span>
+                <span class="c1"># Deploy new model</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model_deployer</span><span class="o">.</span><span class="n">deploy</span><span class="p">(</span><span class="n">new_model</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;New model deployed successfully.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;New model validation failed. Keeping current model.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">drift_detected</span>
+</code></pre></div>
+
+<h3 id="official-documentation_6">Official Documentation</h3>
+<ul>
+<li><strong>Website</strong>: https://evidentlyai.com/</li>
+<li><strong>GitHub</strong>: https://github.com/evidentlyai/evidently</li>
+<li><strong>Documentation</strong>: https://docs.evidentlyai.com/</li>
+</ul>
+<hr />
+<h2 id="automated-testing">Automated Testing</h2>
+<h3 id="what-is-automated-testing-in-mlops">What is Automated Testing in MLOps?</h3>
+<p><strong>Automated Testing</strong> in MLOps involves systematic testing of data, models, and infrastructure to ensure reliability and performance of ML systems.</p>
+<h3 id="types-of-ml-testing">Types of ML Testing</h3>
+<h4 id="1-data-testing">1. Data Testing</h4>
+<ul>
+<li><strong>Schema Validation</strong>: Ensure data structure consistency</li>
+<li><strong>Data Quality</strong>: Check for missing values, outliers, duplicates</li>
+<li><strong>Data Drift</strong>: Monitor distribution changes over time</li>
+<li><strong>Feature Engineering</strong>: Validate feature transformations</li>
+</ul>
+<h4 id="2-model-testing">2. Model Testing</h4>
+<ul>
+<li><strong>Unit Tests</strong>: Test individual model components</li>
+<li><strong>Integration Tests</strong>: Test end-to-end model pipeline</li>
+<li><strong>Performance Tests</strong>: Validate model accuracy and speed</li>
+<li><strong>Regression Tests</strong>: Ensure model improvements don't break existing functionality</li>
+</ul>
+<h4 id="3-infrastructure-testing">3. Infrastructure Testing</h4>
+<ul>
+<li><strong>API Testing</strong>: Test model serving endpoints</li>
+<li><strong>Load Testing</strong>: Validate system performance under load</li>
+<li><strong>Security Testing</strong>: Check for vulnerabilities</li>
+<li><strong>Deployment Testing</strong>: Validate deployment processes</li>
+</ul>
+<h3 id="advantages_8">Advantages ✅</h3>
+<ul>
+<li><strong>Early Bug Detection</strong>: Catch issues before production</li>
+<li><strong>Regression Prevention</strong>: Ensure changes don't break existing functionality</li>
+<li><strong>Quality Assurance</strong>: Maintain high standards across deployments</li>
+<li><strong>Faster Development</strong>: Automated feedback enables rapid iteration</li>
+<li><strong>Documentation</strong>: Tests serve as living documentation</li>
+</ul>
+<h3 id="disadvantages_8">Disadvantages ❌</h3>
+<ul>
+<li><strong>Initial Setup Cost</strong>: Time investment to create comprehensive tests</li>
+<li><strong>Maintenance Overhead</strong>: Tests need to be updated with code changes</li>
+<li><strong>False Positives</strong>: Flaky tests can slow development</li>
+<li><strong>Coverage Complexity</strong>: Difficult to test all edge cases in ML</li>
+</ul>
+<h3 id="testing-framework-structure">Testing Framework Structure</h3>
+<div class="codehilite"><pre><span></span><code><span class="n">tests</span><span class="o">/</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">unit</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">test_data_processing</span><span class="o">.</span><span class="n">py</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">test_feature_engineering</span><span class="o">.</span><span class="n">py</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">test_model_components</span><span class="o">.</span><span class="n">py</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">integration</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">test_model_pipeline</span><span class="o">.</span><span class="n">py</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">test_api_endpoints</span><span class="o">.</span><span class="n">py</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">test_monitoring</span><span class="o">.</span><span class="n">py</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">performance</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">test_model_latency</span><span class="o">.</span><span class="n">py</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">test_memory_usage</span><span class="o">.</span><span class="n">py</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">test_load_testing</span><span class="o">.</span><span class="n">py</span>
+<span class="err">└──</span><span class="w"> </span><span class="n">fixtures</span><span class="o">/</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="n">sample_data</span><span class="o">.</span><span class="n">py</span>
+<span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="n">mock_models</span><span class="o">.</span><span class="n">py</span>
+</code></pre></div>
+
+<h3 id="usage-examples">Usage Examples</h3>
+<h4 id="data-testing">Data Testing</h4>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.data_validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataValidator</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestDataValidation</span><span class="p">:</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;feature1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+            <span class="s1">&#39;feature2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+            <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="p">})</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_data_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test data schema validation&quot;&quot;&quot;</span>
+        <span class="n">validator</span> <span class="o">=</span> <span class="n">DataValidator</span><span class="p">()</span>
+
+        <span class="c1"># Expected schema</span>
+        <span class="n">expected_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;feature1&#39;</span><span class="p">,</span> <span class="s1">&#39;feature2&#39;</span><span class="p">,</span> <span class="s1">&#39;target&#39;</span><span class="p">]</span>
+        <span class="n">expected_types</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;feature1&#39;</span><span class="p">:</span> <span class="s1">&#39;int64&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;feature2&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="s1">&#39;int64&#39;</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Validate schema</span>
+        <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">sample_data</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="n">expected_columns</span>
+        <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="n">expected_types</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">assert</span> <span class="n">sample_data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">dtype</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_data_quality</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test data quality checks&quot;&quot;&quot;</span>
+        <span class="c1"># No missing values</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">sample_data</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
+
+        <span class="c1"># Value ranges</span>
+        <span class="k">assert</span> <span class="n">sample_data</span><span class="p">[</span><span class="s1">&#39;feature1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">sample_data</span><span class="p">[</span><span class="s1">&#39;feature2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">sample_data</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_data_drift</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test data drift detection&quot;&quot;&quot;</span>
+        <span class="c1"># Reference data</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+
+        <span class="c1"># Current data (no drift)</span>
+        <span class="n">current_no_drift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+
+        <span class="c1"># Current data (with drift)</span>
+        <span class="n">current_with_drift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+
+        <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">ks_2samp</span>
+
+        <span class="c1"># No drift case</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">p_value_no_drift</span> <span class="o">=</span> <span class="n">ks_2samp</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">current_no_drift</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">p_value_no_drift</span> <span class="o">&gt;</span> <span class="mf">0.05</span>  <span class="c1"># No significant difference</span>
+
+        <span class="c1"># Drift case</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">p_value_drift</span> <span class="o">=</span> <span class="n">ks_2samp</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">current_with_drift</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">p_value_drift</span> <span class="o">&lt;</span> <span class="mf">0.05</span>  <span class="c1"># Significant difference</span>
+</code></pre></div>
+
+<h4 id="model-testing">Model Testing</h4>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">IrisClassifier</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestIrisModel</span><span class="p">:</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">trained_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load trained model for testing&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;models/iris/artifacts/iris_model.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample test data&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">5.1</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]]),</span>  <span class="c1"># Setosa</span>
+            <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_model_prediction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trained_model</span><span class="p">,</span> <span class="n">test_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test model prediction functionality&quot;&quot;&quot;</span>
+        <span class="n">prediction</span> <span class="o">=</span> <span class="n">trained_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_data</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Check prediction format</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_data</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">])</span>
+        <span class="k">assert</span> <span class="n">prediction</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>  <span class="c1"># Valid class labels</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_model_accuracy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trained_model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test model accuracy threshold&quot;&quot;&quot;</span>
+        <span class="c1"># Load test dataset</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_iris</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+
+        <span class="n">iris</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
+        <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+            <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Test accuracy</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="n">trained_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+        <span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">accuracy</span> <span class="o">&gt;=</span> <span class="mf">0.9</span>  <span class="c1"># Minimum 90% accuracy</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_model_latency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trained_model</span><span class="p">,</span> <span class="n">test_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test prediction latency&quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">prediction</span> <span class="o">=</span> <span class="n">trained_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_data</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">])</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="n">latency</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="k">assert</span> <span class="n">latency</span> <span class="o">&lt;</span> <span class="mf">0.1</span>  <span class="c1"># Less than 100ms</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_model_robustness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trained_model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test model robustness to edge cases&quot;&quot;&quot;</span>
+        <span class="c1"># Edge cases</span>
+        <span class="n">edge_cases</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>          <span class="c1"># All zeros</span>
+            <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>      <span class="c1"># High values</span>
+            <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]</span>   <span class="c1"># Very small values</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">edge_cases</span><span class="p">:</span>
+            <span class="n">prediction</span> <span class="o">=</span> <span class="n">trained_model</span><span class="o">.</span><span class="n">predict</span><span class="p">([</span><span class="n">case</span><span class="p">])</span>
+            <span class="k">assert</span> <span class="n">prediction</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+</code></pre></div>
+
+<h4 id="api-testing">API Testing</h4>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.testclient</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">api.main</span><span class="w"> </span><span class="kn">import</span> <span class="n">app</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestMLAPI</span><span class="p">:</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TestClient</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_health_endpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test health check endpoint&quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/health&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+        <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;healthy&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_iris_prediction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test iris prediction endpoint&quot;&quot;&quot;</span>
+        <span class="n">test_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;sepal_length&quot;</span><span class="p">:</span> <span class="mf">5.1</span><span class="p">,</span>
+            <span class="s2">&quot;sepal_width&quot;</span><span class="p">:</span> <span class="mf">3.5</span><span class="p">,</span>
+            <span class="s2">&quot;petal_length&quot;</span><span class="p">:</span> <span class="mf">1.4</span><span class="p">,</span>
+            <span class="s2">&quot;petal_width&quot;</span><span class="p">:</span> <span class="mf">0.2</span>
+        <span class="p">}</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/predict/iris&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">test_data</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="c1"># Check response structure</span>
+        <span class="k">assert</span> <span class="s2">&quot;prediction&quot;</span> <span class="ow">in</span> <span class="n">result</span>
+        <span class="k">assert</span> <span class="s2">&quot;confidence&quot;</span> <span class="ow">in</span> <span class="n">result</span>
+        <span class="k">assert</span> <span class="s2">&quot;probabilities&quot;</span> <span class="ow">in</span> <span class="n">result</span>
+
+        <span class="c1"># Check data types</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;prediction&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;confidence&quot;</span><span class="p">],</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;probabilities&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span>
+
+        <span class="c1"># Check value ranges</span>
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;confidence&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;prediction&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;setosa&quot;</span><span class="p">,</span> <span class="s2">&quot;versicolor&quot;</span><span class="p">,</span> <span class="s2">&quot;virginica&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_invalid_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test API with invalid input&quot;&quot;&quot;</span>
+        <span class="n">invalid_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;sepal_length&quot;</span><span class="p">:</span> <span class="s2">&quot;invalid&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sepal_width&quot;</span><span class="p">:</span> <span class="mf">3.5</span><span class="p">,</span>
+            <span class="s2">&quot;petal_length&quot;</span><span class="p">:</span> <span class="mf">1.4</span><span class="p">,</span>
+            <span class="s2">&quot;petal_width&quot;</span><span class="p">:</span> <span class="mf">0.2</span>
+        <span class="p">}</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/predict/iris&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">invalid_data</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">422</span>  <span class="c1"># Validation error</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_api_performance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test API response time&quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+        <span class="n">test_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;sepal_length&quot;</span><span class="p">:</span> <span class="mf">5.1</span><span class="p">,</span>
+            <span class="s2">&quot;sepal_width&quot;</span><span class="p">:</span> <span class="mf">3.5</span><span class="p">,</span>
+            <span class="s2">&quot;petal_length&quot;</span><span class="p">:</span> <span class="mf">1.4</span><span class="p">,</span>
+            <span class="s2">&quot;petal_width&quot;</span><span class="p">:</span> <span class="mf">0.2</span>
+        <span class="p">}</span>
+
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/predict/iris&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">test_data</span><span class="p">)</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1.0</span>  <span class="c1"># Less than 1 second</span>
+</code></pre></div>
+
+<h4 id="load-testing">Load Testing</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># tests/performance/test_load.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">concurrent.futures</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statistics</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestLoadPerformance</span><span class="p">:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_concurrent_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test API under concurrent load&quot;&quot;&quot;</span>
+        <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:8000&quot;</span>
+        <span class="n">test_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;sepal_length&quot;</span><span class="p">:</span> <span class="mf">5.1</span><span class="p">,</span>
+            <span class="s2">&quot;sepal_width&quot;</span><span class="p">:</span> <span class="mf">3.5</span><span class="p">,</span>
+            <span class="s2">&quot;petal_length&quot;</span><span class="p">:</span> <span class="mf">1.4</span><span class="p">,</span>
+            <span class="s2">&quot;petal_width&quot;</span><span class="p">:</span> <span class="mf">0.2</span>
+        <span class="p">}</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">make_request</span><span class="p">():</span>
+            <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_url</span><span class="si">}</span><span class="s2">/predict/iris&quot;</span><span class="p">,</span>
+                <span class="n">json</span><span class="o">=</span><span class="n">test_data</span>
+            <span class="p">)</span>
+            <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s1">&#39;status_code&#39;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                <span class="s1">&#39;response_time&#39;</span><span class="p">:</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+            <span class="p">}</span>
+
+        <span class="c1"># Simulate 50 concurrent users</span>
+        <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+            <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">make_request</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)]</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span> <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">futures</span><span class="p">]</span>
+
+        <span class="c1"># Analyze results</span>
+        <span class="n">success_count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;status_code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="n">response_times</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;response_time&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+
+        <span class="c1"># Assertions</span>
+        <span class="k">assert</span> <span class="n">success_count</span> <span class="o">&gt;=</span> <span class="mi">95</span>  <span class="c1"># 95% success rate</span>
+        <span class="k">assert</span> <span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">response_times</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.5</span>  <span class="c1"># Average &lt; 500ms</span>
+        <span class="k">assert</span> <span class="nb">max</span><span class="p">(</span><span class="n">response_times</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">2.0</span>  <span class="c1"># Max &lt; 2 seconds</span>
+</code></pre></div>
+
+<h3 id="test-configuration">Test Configuration</h3>
+<h4 id="pytestini">pytest.ini</h4>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool:pytest]</span>
+<span class="na">testpaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">tests</span>
+<span class="na">python_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">test_*.py</span>
+<span class="na">python_classes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Test*</span>
+<span class="na">python_functions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">test_*</span>
+<span class="na">addopts</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="na">-v</span>
+<span class="w">    </span><span class="na">--tb</span><span class="o">=</span><span class="s">short</span>
+<span class="w">    </span><span class="na">--cov</span><span class="o">=</span><span class="s">src</span>
+<span class="w">    </span><span class="na">--cov-report</span><span class="o">=</span><span class="s">html</span>
+<span class="w">    </span><span class="na">--cov-report</span><span class="o">=</span><span class="s">term-missing</span>
+<span class="w">    </span><span class="na">--cov-fail-under</span><span class="o">=</span><span class="s">80</span>
+<span class="na">markers</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="na">unit</span><span class="o">:</span><span class="w"> </span><span class="s">Unit tests</span>
+<span class="w">    </span><span class="na">integration</span><span class="o">:</span><span class="w"> </span><span class="s">Integration tests</span>
+<span class="w">    </span><span class="na">performance</span><span class="o">:</span><span class="w"> </span><span class="s">Performance tests</span>
+<span class="w">    </span><span class="na">slow</span><span class="o">:</span><span class="w"> </span><span class="s">Slow running tests</span>
+</code></pre></div>
+
+<h4 id="conftestpy">conftest.py</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># tests/conftest.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mock</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_iris_data</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample iris dataset for testing&quot;&quot;&quot;</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s1">&#39;sepal_length&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+        <span class="s1">&#39;sepal_width&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+        <span class="s1">&#39;petal_length&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+        <span class="s1">&#39;petal_width&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+        <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="p">})</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mock_model</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mock model for testing&quot;&quot;&quot;</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]])</span>
+    <span class="k">return</span> <span class="n">model</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_test_environment</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Setup test environment&quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;TESTING&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;true&#39;</span>
+    <span class="k">yield</span>
+    <span class="k">del</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;TESTING&#39;</span><span class="p">]</span>
+</code></pre></div>
+
+<h3 id="testing-in-our-architecture">Testing in Our Architecture</h3>
+<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────┐
+│            Testing Layer                │
+├─────────────────────────────────────────┤
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐  │
+│  │  Unit   │  │Integration │ │Performance│  │
+│  │ Tests   │  │  Tests   │ │  Tests   │  │
+│  └─────────┘  └─────────┘  └─────────┘  │
+│       │            │            │       │
+│       └────────────┼────────────┘       │
+│                    │                    │
+│       ┌────────────▼────────────┐       │
+│       │    Continuous Testing   │       │
+│       │    (GitHub Actions)     │       │
+│       └─────────────────────────┘       │
+└─────────────────────────────────────────┘
+</code></pre></div>
+
+<h3 id="official-documentation_7">Official Documentation</h3>
+<ul>
+<li><strong>Pytest</strong>: https://docs.pytest.org/</li>
+<li><strong>FastAPI Testing</strong>: https://fastapi.tiangolo.com/tutorial/testing/</li>
+<li><strong>MLOps Testing</strong>: https://ml-ops.org/content/testing</li>
+</ul>
+<hr />
+<h2 id="integration-architecture">Integration &amp; Architecture</h2>
+<h3 id="complete-mlops-architecture">Complete MLOps Architecture</h3>
+<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────┐
+│                      MLOps Complete Stack                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌───────────────────┐    ┌───────────────────┐                │
+│  │   Development     │    │    Production     │                │
+│  │   Environment     │    │   Environment     │                │
+│  │                   │    │                   │                │
+│  │  ┌─────────────┐  │    │  ┌─────────────┐  │                │
+│  │  │    Data     │  │    │  │    Data     │  │                │
+│  │  │ Versioning  │◄─┼────┼──┤ Monitoring  │  │                │
+│  │  │   (DVC)     │  │    │  │(Evidently)  │  │                │
+│  │  └─────────────┘  │    │  └─────────────┘  │                │
+│  │         │          │    │         │         │                │
+│  │  ┌─────────────┐  │    │  ┌─────────────┐  │                │
+│  │  │   Model     │  │    │  │   Model     │  │                │
+│  │  │  Training   │◄─┼────┼──┤  Serving    │  │                │
+│  │  │  (MLflow)   │  │    │  │ (FastAPI)   │  │                │
+│  │  └─────────────┘  │    │  └─────────────┘  │                │
+│  │         │          │    │         │         │                │
+│  │  ┌─────────────┐  │    │  ┌─────────────┐  │                │
+│  │  │   Testing   │  │    │  │ Monitoring  │  │                │
+│  │  │  (Pytest)   │  │    │  │(Prometheus/ │  │                │
+│  │  │             │  │    │  │  Grafana)   │  │                │
+│  │  └─────────────┘  │    │  └─────────────┘  │                │
+│  └───────────────────┘    └───────────────────┘                │
+│           │                         │                          │
+│           └─────────────┬───────────┘                          │
+│                         │                                      │
+│                ┌─────────────────┐                             │
+│                │    CI/CD        │                             │
+│                │ (GitHub Actions)│                             │
+│                │                 │                             │
+│                │ ┌─────────────┐ │                             │
+│                │ │Containerization│                             │
+│                │ │   (Docker)   │ │                             │
+│                │ └─────────────┘ │                             │
+│                └─────────────────┘                             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+
+<h3 id="data-flow-architecture">Data Flow Architecture</h3>
+<div class="codehilite"><pre><span></span><code>Input Data ──┐
+             │
+             ▼
+    ┌─────────────────┐
+    │  Data Pipeline  │
+    │                 │
+    │ ┌─────────────┐ │    ┌─────────────┐
+    │ │     DVC     │◄┼────┤ Data Store  │
+    │ │ Versioning  │ │    │    (S3)     │
+    │ └─────────────┘ │    └─────────────┘
+    └─────────────────┘
+             │
+             ▼
+    ┌─────────────────┐
+    │ Model Training  │
+    │                 │
+    │ ┌─────────────┐ │    ┌─────────────┐
+    │ │   MLflow    │◄┼────┤Model Registry│
+    │ │  Tracking   │ │    │   (MLflow)  │
+    │ └─────────────┘ │    └─────────────┘
+    └─────────────────┘
+             │
+             ▼
+    ┌─────────────────┐
+    │ Model Serving   │
+    │                 │
+    │ ┌─────────────┐ │    ┌─────────────┐
+    │ │   FastAPI   │◄┼────┤   Docker    │
+    │ │    Server   │ │    │ Container   │
+    │ └─────────────┘ │    └─────────────┘
+    └─────────────────┘
+             │
+             ▼
+    ┌─────────────────┐
+    │   Monitoring    │
+    │                 │
+    │ ┌─────────────┐ │    ┌─────────────┐
+    │ │ Prometheus  │◄┼────┤   Grafana   │
+    │ │   Metrics   │ │    │ Dashboard   │
+    │ └─────────────┘ │    └─────────────┘
+    └─────────────────┘
+             │
+             ▼
+    ┌─────────────────┐
+    │ Quality Gates   │
+    │                 │
+    │ ┌─────────────┐ │
+    │ │ Evidently   │ │
+    │ │   Drift     │ │
+    │ └─────────────┘ │
+    └─────────────────┘
+</code></pre></div>
+
+<h3 id="service-communication">Service Communication</h3>
+<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────┐
+│                   Service Mesh                                  │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐         │
+│  │   FastAPI   │    │   MLflow    │    │ Prometheus  │         │
+│  │    :8000    │◄──►│    :5000    │◄──►│    :9090    │         │
+│  └─────────────┘    └─────────────┘    └─────────────┘         │
+│         │                   │                   │              │
+│         │                   │                   │              │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐         │
+│  │   Grafana   │    │   Jupyter   │    │    Redis    │         │
+│  │    :3000    │◄──►│    :8888    │◄──►│    :6379    │         │
+│  └─────────────┘    └─────────────┘    └─────────────┘         │
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │               Load Balancer / API Gateway               │   │
+│  │                         :80                             │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+
+<h3 id="deployment-pipeline">Deployment Pipeline</h3>
+<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────┐
+│                  Deployment Pipeline                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Developer Push                                                 │
+│         │                                                       │
+│         ▼                                                       │
+│  ┌─────────────┐                                                │
+│  │   GitHub    │                                                │
+│  │ Repository  │                                                │
+│  └─────────────┘                                                │
+│         │                                                       │
+│         ▼                                                       │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐       │
+│  │   Trigger   │────►│    Test     │────►│    Build    │       │
+│  │   CI/CD     │     │   Suite     │     │   Docker    │       │
+│  └─────────────┘     └─────────────┘     └─────────────┘       │
+│                              │                   │             │
+│                              ▼                   │             │
+│                      ┌─────────────┐             │             │
+│                      │  Security   │             │             │
+│                      │    Scan     │             │             │
+│                      └─────────────┘             │             │
+│                              │                   │             │
+│                              ▼                   ▼             │
+│                      ┌─────────────┐     ┌─────────────┐       │
+│                      │  Quality    │────►│   Deploy    │       │
+│                      │   Gates     │     │    Stage    │       │
+│                      └─────────────┘     └─────────────┘       │
+│                                                  │             │
+│                                                  ▼             │
+│                                          ┌─────────────┐       │
+│                                          │   Deploy    │       │
+│                                          │ Production  │       │
+│                                          └─────────────┘       │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+
+<h3 id="key-integration-patterns">Key Integration Patterns</h3>
+<h4 id="1-event-driven-architecture">1. Event-Driven Architecture</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Event-driven model retraining</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ModelRetrainingOrchestrator</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drift_monitor</span> <span class="o">=</span> <span class="n">Evidently</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_trainer</span> <span class="o">=</span> <span class="n">MLflowTrainer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deployer</span> <span class="o">=</span> <span class="n">DockerDeployer</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_drift_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">drift_score</span> <span class="o">&gt;</span> <span class="mf">0.3</span><span class="p">:</span>
+            <span class="c1"># Trigger retraining</span>
+            <span class="n">new_model</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_trainer</span><span class="o">.</span><span class="n">retrain</span><span class="p">()</span>
+
+            <span class="c1"># Deploy if validation passes</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_model</span><span class="p">(</span><span class="n">new_model</span><span class="p">):</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">deployer</span><span class="o">.</span><span class="n">deploy</span><span class="p">(</span><span class="n">new_model</span><span class="p">)</span>
+</code></pre></div>
+
+<h4 id="2-circuit-breaker-pattern">2. Circuit Breaker Pattern</h4>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">circuit_breaker</span><span class="w"> </span><span class="kn">import</span> <span class="n">CircuitBreaker</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ModelService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">primary_model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="s2">&quot;v2.0&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fallback_model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="s2">&quot;v1.0&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">circuit_breaker</span> <span class="o">=</span> <span class="n">CircuitBreaker</span><span class="p">(</span>
+            <span class="n">failure_threshold</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span>
+        <span class="p">)</span>
+
+    <span class="nd">@circuit_breaker</span><span class="o">.</span><span class="n">protected</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</code></pre></div>
+
+<h4 id="3-blue-green-deployment">3. Blue-Green Deployment</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># docker-compose.blue-green.yml</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.8&#39;</span>
+
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">api-blue</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mlops-api:v1.0</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MODEL_VERSION=v1.0</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8001:8000&quot;</span>
+
+<span class="w">  </span><span class="nt">api-green</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mlops-api:v2.0</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MODEL_VERSION=v2.0</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8002:8000&quot;</span>
+
+<span class="w">  </span><span class="nt">load-balancer</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx:alpine</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;80:80&quot;</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-blue</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-green</span>
+</code></pre></div>
+
+<h3 id="monitoring-integration">Monitoring Integration</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Comprehensive monitoring setup</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MLOpsMonitoring</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prometheus</span> <span class="o">=</span> <span class="n">PrometheusClient</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grafana</span> <span class="o">=</span> <span class="n">GrafanaClient</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evidently</span> <span class="o">=</span> <span class="n">EvidentialAI</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_monitoring</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Model performance metrics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_model_metrics</span><span class="p">()</span>
+
+        <span class="c1"># Infrastructure metrics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_infrastructure_metrics</span><span class="p">()</span>
+
+        <span class="c1"># Business metrics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_business_metrics</span><span class="p">()</span>
+
+        <span class="c1"># Alerting rules</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_alerts</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_model_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setup ML-specific monitoring&quot;&quot;&quot;</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;model_prediction_accuracy&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;model_latency_p95&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;data_drift_score&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;feature_importance_changes&#39;</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prometheus</span><span class="o">.</span><span class="n">create_gauge</span><span class="p">(</span><span class="n">metric</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_alerts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setup alerting rules&quot;&quot;&quot;</span>
+        <span class="n">alerts</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;ModelAccuracyDrop&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;condition&#39;</span><span class="p">:</span> <span class="s1">&#39;model_accuracy &lt; 0.85&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;action&#39;</span><span class="p">:</span> <span class="s1">&#39;trigger_retraining&#39;</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;HighLatency&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;condition&#39;</span><span class="p">:</span> <span class="s1">&#39;model_latency_p95 &gt; 500ms&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;action&#39;</span><span class="p">:</span> <span class="s1">&#39;scale_service&#39;</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;DataDrift&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;condition&#39;</span><span class="p">:</span> <span class="s1">&#39;data_drift_score &gt; 0.3&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;action&#39;</span><span class="p">:</span> <span class="s1">&#39;alert_data_team&#39;</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">alert</span> <span class="ow">in</span> <span class="n">alerts</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prometheus</span><span class="o">.</span><span class="n">create_alert</span><span class="p">(</span><span class="n">alert</span><span class="p">)</span>
+</code></pre></div>
+
+<hr />
+<h2 id="best-practices-next-steps">Best Practices &amp; Next Steps</h2>
+<h3 id="mlops-best-practices">MLOps Best Practices</h3>
+<h4 id="1-data-management">1. Data Management</h4>
+<ul>
+<li><strong>Version Everything</strong>: Data, code, models, and configurations</li>
+<li><strong>Data Quality</strong>: Implement comprehensive validation</li>
+<li><strong>Schema Evolution</strong>: Handle data schema changes gracefully</li>
+<li><strong>Data Lineage</strong>: Track data provenance and transformations</li>
+</ul>
+<h4 id="2-model-development">2. Model Development</h4>
+<ul>
+<li><strong>Experiment Tracking</strong>: Log all experiments with MLflow</li>
+<li><strong>Model Validation</strong>: Cross-validation and holdout testing</li>
+<li><strong>Feature Stores</strong>: Centralized feature management</li>
+<li><strong>Model Interpretability</strong>: Ensure models are explainable</li>
+</ul>
+<h4 id="3-deployment">3. Deployment</h4>
+<ul>
+<li><strong>Gradual Rollouts</strong>: Use canary or blue-green deployments</li>
+<li><strong>Health Checks</strong>: Implement comprehensive health monitoring</li>
+<li><strong>Rollback Strategy</strong>: Quick rollback mechanisms</li>
+<li><strong>Load Testing</strong>: Validate performance under load</li>
+</ul>
+<h4 id="4-monitoring">4. Monitoring</h4>
+<ul>
+<li><strong>Multi-layer Monitoring</strong>: Infrastructure, application, and business metrics</li>
+<li><strong>Alerting</strong>: Proactive alerting with clear escalation paths</li>
+<li><strong>Drift Detection</strong>: Continuous monitoring for data and model drift</li>
+<li><strong>SLA Monitoring</strong>: Track service level agreements</li>
+</ul>
+<h4 id="5-security">5. Security</h4>
+<ul>
+<li><strong>Model Security</strong>: Protect against adversarial attacks</li>
+<li><strong>Data Privacy</strong>: Implement privacy-preserving techniques</li>
+<li><strong>Access Control</strong>: Role-based access to systems</li>
+<li><strong>Audit Logs</strong>: Comprehensive logging for compliance</li>
+</ul>
+<h3 id="implementation-roadmap">Implementation Roadmap</h3>
+<h4 id="phase-1-foundation-weeks-1-4">Phase 1: Foundation (Weeks 1-4)</h4>
+<ul>
+<li>[ ] Set up version control (Git + DVC)</li>
+<li>[ ] Implement basic CI/CD pipeline</li>
+<li>[ ] Create initial model training pipeline</li>
+<li>[ ] Set up MLflow for experiment tracking</li>
+</ul>
+<h4 id="phase-2-serving-monitoring-weeks-5-8">Phase 2: Serving &amp; Monitoring (Weeks 5-8)</h4>
+<ul>
+<li>[ ] Deploy models with FastAPI</li>
+<li>[ ] Implement Prometheus monitoring</li>
+<li>[ ] Create Grafana dashboards</li>
+<li>[ ] Set up automated testing</li>
+</ul>
+<h4 id="phase-3-advanced-features-weeks-9-12">Phase 3: Advanced Features (Weeks 9-12)</h4>
+<ul>
+<li>[ ] Implement data drift detection</li>
+<li>[ ] Add model retraining automation</li>
+<li>[ ] Enhance security measures</li>
+<li>[ ] Optimize performance</li>
+</ul>
+<h4 id="phase-4-production-hardening-weeks-13-16">Phase 4: Production Hardening (Weeks 13-16)</h4>
+<ul>
+<li>[ ] Load testing and optimization</li>
+<li>[ ] Disaster recovery planning</li>
+<li>[ ] Documentation and training</li>
+<li>[ ] Compliance and governance</li>
+</ul>
+<h3 id="common-pitfalls-to-avoid">Common Pitfalls to Avoid</h3>
+<h4 id="technical-pitfalls">Technical Pitfalls</h4>
+<ul>
+<li><strong>Data Leakage</strong>: Ensure proper train/test splits</li>
+<li><strong>Model Overfitting</strong>: Use proper validation techniques</li>
+<li><strong>Infrastructure Coupling</strong>: Avoid tight coupling between components</li>
+<li><strong>Technical Debt</strong>: Regular refactoring and cleanup</li>
+</ul>
+<h4 id="organizational-pitfalls">Organizational Pitfalls</h4>
+<ul>
+<li><strong>Siloed Teams</strong>: Foster collaboration between teams</li>
+<li><strong>Unclear Ownership</strong>: Define clear roles and responsibilities</li>
+<li><strong>Inadequate Testing</strong>: Comprehensive testing strategy</li>
+<li><strong>Poor Documentation</strong>: Maintain up-to-date documentation</li>
+</ul>
+<h3 id="next-steps">Next Steps</h3>
+<h4 id="immediate-actions">Immediate Actions</h4>
+<ol>
+<li><strong>Start Small</strong>: Begin with one model and expand</li>
+<li><strong>Focus on Automation</strong>: Automate repetitive tasks</li>
+<li><strong>Implement Monitoring</strong>: Start monitoring from day one</li>
+<li><strong>Build Team Skills</strong>: Invest in team training</li>
+</ol>
+<h4 id="advanced-topics-to-explore">Advanced Topics to Explore</h4>
+<ul>
+<li><strong>Feature Stores</strong>: Centralized feature management</li>
+<li><strong>Model Mesh</strong>: Multi-model serving architecture</li>
+<li><strong>MLOps Platforms</strong>: Kubeflow, Seldon, or MLflow</li>
+<li><strong>Edge Deployment</strong>: Mobile and IoT model deployment</li>
+</ul>
+<h4 id="resources-for-continued-learning">Resources for Continued Learning</h4>
+<p><strong>Books</strong>
+- "Designing Machine Learning Systems" by Chip Huyen
+- "Building Machine Learning Pipelines" by Hannes Hapke
+- "MLOps: Continuous Delivery for Machine Learning" by Gil Hoffer</p>
+<p><strong>Courses</strong>
+- MLOps Specialization (Coursera)
+- Made With ML Course
+- Full Stack Deep Learning</p>
+<p><strong>Communities</strong>
+- MLOps Community Slack
+- Reddit r/MachineLearning
+- MLOps Conference talks</p>
+<p><strong>Tools to Explore</strong>
+- <strong>Kubeflow</strong>: Kubernetes-native ML workflows
+- <strong>Seldon Core</strong>: Enterprise model deployment
+- <strong>Feast</strong>: Feature store solution
+- <strong>Great Expectations</strong>: Data validation framework</p>
+<hr />
+<h2 id="workshop-summary">Workshop Summary</h2>
+<h3 id="what-weve-covered">What We've Covered</h3>
+<p>✅ <strong>Complete MLOps Pipeline Architecture</strong>
+- End-to-end understanding of MLOps components
+- Integration patterns and best practices
+- Real-world implementation examples</p>
+<p>✅ <strong>8 Essential MLOps Tools</strong>
+- DVC for data versioning
+- MLflow for experiment tracking
+- FastAPI for model serving
+- Prometheus &amp; Grafana for monitoring
+- GitHub Actions for CI/CD
+- Docker for containerization
+- Evidently AI for drift detection
+- Pytest for automated testing</p>
+<p>✅ <strong>Production-Ready Practices</strong>
+- Security considerations
+- Performance optimization
+- Scalability patterns
+- Monitoring strategies</p>
+<h3 id="key-takeaways">Key Takeaways</h3>
+<ol>
+<li><strong>MLOps is a Journey</strong>: Start simple and evolve</li>
+<li><strong>Automation is Key</strong>: Automate everything possible</li>
+<li><strong>Monitoring is Critical</strong>: Monitor models, data, and infrastructure</li>
+<li><strong>Culture Matters</strong>: Foster collaboration between teams</li>
+<li><strong>Continuous Learning</strong>: MLOps tools and practices evolve rapidly</li>
+</ol>
+<h3 id="workshop-resources">Workshop Resources</h3>
+<p>All code, configurations, and documentation are available in our demo repository:
+- <strong>GitHub Repository</strong>: [MLOps Demo Project]
+- <strong>Documentation</strong>: Complete setup guides and tutorials
+- <strong>Examples</strong>: Working code for all components
+- <strong>Tests</strong>: Comprehensive test suites</p>
+<hr />
+<p><strong>Thank you for attending the MLOps Workshop!</strong></p>
+<p><em>Questions and Discussion</em></p>
+<hr />
+    </body>
+    </html>
+    
