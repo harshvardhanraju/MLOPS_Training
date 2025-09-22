@@ -1,0 +1,325 @@
+{
+  "project_info": {
+    "name": "MLOps Complete Demo",
+    "description": "Comprehensive MLOps pipeline demonstration",
+    "created": "2025-09-22T11:20:26.436211",
+    "version": "1.0.0"
+  },
+  "project_structure": {
+    "models": {
+      "exists": true,
+      "files": {
+        ".py": 10,
+        ".md": 0,
+        ".yml": 0,
+        ".yaml": 0,
+        ".json": 0,
+        "total": 10
+      }
+    },
+    "api": {
+      "exists": true,
+      "files": {
+        ".py": 10,
+        ".md": 0,
+        ".yml": 0,
+        ".yaml": 0,
+        ".json": 0,
+        "total": 10
+      }
+    },
+    "monitoring": {
+      "exists": true,
+      "files": {
+        ".py": 3,
+        ".md": 0,
+        ".yml": 4,
+        ".yaml": 0,
+        ".json": 1,
+        "total": 8
+      }
+    },
+    "tests": {
+      "exists": true,
+      "files": {
+        ".py": 5,
+        ".md": 0,
+        ".yml": 0,
+        ".yaml": 0,
+        ".json": 0,
+        "total": 5
+      }
+    },
+    "docs": {
+      "exists": true,
+      "files": {
+        ".py": 0,
+        ".md": 3,
+        ".yml": 0,
+        ".yaml": 0,
+        ".json": 0,
+        "total": 3
+      }
+    },
+    "data": {
+      "exists": true,
+      "files": {
+        ".py": 1,
+        ".md": 0,
+        ".yml": 0,
+        ".yaml": 0,
+        ".json": 0,
+        "total": 3
+      }
+    },
+    "scripts": {
+      "exists": true,
+      "files": {
+        ".py": 4,
+        ".md": 0,
+        ".yml": 0,
+        ".yaml": 0,
+        ".json": 0,
+        "total": 4
+      }
+    },
+    "ci_cd": {
+      "exists": true,
+      "files": {
+        ".py": 0,
+        ".md": 0,
+        ".yml": 3,
+        ".yaml": 0,
+        ".json": 0,
+        "total": 3
+      }
+    },
+    "docker": {
+      "exists": true
+    }
+  },
+  "models": {
+    "iris": {
+      "name": "Iris Classification",
+      "type": "Multiclass Classification",
+      "algorithm": "Random Forest",
+      "features": 4,
+      "classes": 3,
+      "metrics": [
+        "accuracy",
+        "f1_score",
+        "precision",
+        "recall"
+      ]
+    },
+    "house_price": {
+      "name": "House Price Prediction",
+      "type": "Regression",
+      "algorithm": "XGBoost",
+      "features": 8,
+      "target": "price",
+      "metrics": [
+        "r2_score",
+        "rmse",
+        "mae"
+      ]
+    },
+    "sentiment": {
+      "name": "Sentiment Analysis",
+      "type": "Text Classification",
+      "algorithm": "DistilBERT",
+      "features": "text",
+      "classes": 3,
+      "metrics": [
+        "accuracy",
+        "f1_score"
+      ]
+    },
+    "churn": {
+      "name": "Customer Churn Prediction",
+      "type": "Binary Classification",
+      "algorithm": "LightGBM",
+      "features": 14,
+      "classes": 2,
+      "metrics": [
+        "accuracy",
+        "f1_score",
+        "auc",
+        "precision",
+        "recall"
+      ]
+    },
+    "image": {
+      "name": "Image Classification",
+      "type": "Computer Vision",
+      "algorithm": "CNN",
+      "features": "32x32x3",
+      "classes": 3,
+      "metrics": [
+        "accuracy",
+        "f1_score"
+      ]
+    }
+  },
+  "technology_stack": {
+    "data_versioning": {
+      "tool": "DVC (Data Version Control)",
+      "purpose": "Data and pipeline versioning",
+      "features": [
+        "Data tracking",
+        "Pipeline automation",
+        "Reproducibility"
+      ]
+    },
+    "experiment_tracking": {
+      "tool": "MLflow",
+      "purpose": "Model versioning and experiment tracking",
+      "features": [
+        "Experiment logging",
+        "Model registry",
+        "Model serving"
+      ]
+    },
+    "model_serving": {
+      "tool": "FastAPI",
+      "purpose": "REST API for model serving",
+      "features": [
+        "Automatic docs",
+        "High performance",
+        "Type validation"
+      ]
+    },
+    "monitoring": {
+      "tool": "Prometheus + Grafana",
+      "purpose": "System and model monitoring",
+      "features": [
+        "Metrics collection",
+        "Alerting",
+        "Dashboards"
+      ]
+    },
+    "ci_cd": {
+      "tool": "GitHub Actions",
+      "purpose": "Continuous integration and deployment",
+      "features": [
+        "Automated testing",
+        "Model retraining",
+        "Deployment"
+      ]
+    },
+    "containerization": {
+      "tool": "Docker + Docker Compose",
+      "purpose": "Application containerization and orchestration",
+      "features": [
+        "Consistent environments",
+        "Service orchestration",
+        "Scalability"
+      ]
+    },
+    "drift_detection": {
+      "tool": "Evidently AI",
+      "purpose": "Data drift and model performance monitoring",
+      "features": [
+        "Statistical tests",
+        "Visual reports",
+        "Automated alerts"
+      ]
+    },
+    "testing": {
+      "tool": "Pytest",
+      "purpose": "Automated testing framework",
+      "features": [
+        "Unit tests",
+        "Integration tests",
+        "Performance validation"
+      ]
+    }
+  },
+  "mlops_capabilities": {
+    "data_management": {
+      "implemented": true,
+      "features": [
+        "Data versioning with DVC",
+        "Automated dataset creation",
+        "Data quality validation",
+        "Data drift detection"
+      ]
+    },
+    "model_development": {
+      "implemented": true,
+      "features": [
+        "Multiple model types (5 models)",
+        "Experiment tracking with MLflow",
+        "Model versioning and registry",
+        "Hyperparameter logging"
+      ]
+    },
+    "model_deployment": {
+      "implemented": true,
+      "features": [
+        "REST API serving",
+        "Containerized deployment",
+        "Health checks",
+        "API documentation"
+      ]
+    },
+    "monitoring_observability": {
+      "implemented": true,
+      "features": [
+        "System metrics (CPU, memory)",
+        "Model performance metrics",
+        "Request/response monitoring",
+        "Custom dashboards"
+      ]
+    },
+    "ci_cd_automation": {
+      "implemented": true,
+      "features": [
+        "Automated testing",
+        "Model validation",
+        "Automated deployment",
+        "Scheduled retraining"
+      ]
+    },
+    "governance_compliance": {
+      "implemented": true,
+      "features": [
+        "Model lineage tracking",
+        "Audit trails",
+        "Version control",
+        "Documentation"
+      ]
+    }
+  },
+  "key_features": [
+    "5 different ML models showcasing various ML paradigms",
+    "Complete CI/CD pipeline with automated testing",
+    "Real-time monitoring and alerting",
+    "Data drift detection and model performance tracking",
+    "Containerized microservices architecture",
+    "Interactive API documentation",
+    "Comprehensive test coverage",
+    "Knowledge transfer documentation"
+  ],
+  "deployment_modes": {
+    "development": {
+      "description": "Local development with hot reload",
+      "command": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up"
+    },
+    "production": {
+      "description": "Production deployment with all services",
+      "command": "docker-compose up -d"
+    },
+    "testing": {
+      "description": "Testing environment for CI/CD",
+      "command": "pytest tests/ -v"
+    }
+  },
+  "access_points": {
+    "api_docs": "http://localhost:8000/docs",
+    "mlflow_ui": "http://localhost:5000",
+    "grafana_dashboard": "http://localhost:3000",
+    "prometheus_metrics": "http://localhost:9090",
+    "jupyter_notebooks": "http://localhost:8888"
+  }
+}

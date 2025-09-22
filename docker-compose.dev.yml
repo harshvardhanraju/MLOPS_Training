@@ -1,0 +1,47 @@
+version: '3.8'
+
+# Development override for docker-compose.yml
+# Use with: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  api:
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/app
+    environment:
+      - DEBUG=true
+      - RELOAD=true
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+
+  mlflow:
+    volumes:
+      - ./:/app
+    environment:
+      - DEBUG=true
+
+  # Additional development tools
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - mlops-network
+
+  # Database for storing metrics and logs
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=mlops
+      - POSTGRES_USER=mlops
+      - POSTGRES_PASSWORD=mlops123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mlops-network
+
+volumes:
+  postgres_data:

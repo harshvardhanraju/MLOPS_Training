@@ -1,0 +1,74 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter
+.ipynb_checkpoints
+
+# MLflow
+mlruns/
+mlartifacts/
+
+# DVC
+.dvc/cache
+.dvc/tmp
+
+# Data (handled by DVC)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Models
+models/*/artifacts/
+*.pkl
+*.joblib
+*.h5
+*.pb
+
+# Logs
+logs/
+*.log
+
+# Environment variables
+.env
+
+# Docker
+docker-compose.override.yml
+
+# Monitoring data
+monitoring/data/
+
+# OS
+.DS_Store
+Thumbs.db

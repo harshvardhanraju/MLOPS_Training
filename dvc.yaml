@@ -1,0 +1,52 @@
+stages:
+  create_datasets:
+    cmd: python data/create_datasets.py
+    deps:
+    - data/create_datasets.py
+    outs:
+    - data/raw/iris.csv
+    - data/raw/housing.csv
+    - data/raw/churn.csv
+    - data/raw/sentiment.csv
+    - data/raw/image_metadata.csv
+    - data/raw/data_summary.txt
+
+  train_iris:
+    cmd: cd models/iris && python train.py
+    deps:
+    - data/raw/iris.csv
+    - models/iris/train.py
+    outs:
+    - models/iris/artifacts/
+
+  train_housing:
+    cmd: cd models/house_price && python train.py
+    deps:
+    - data/raw/housing.csv
+    - models/house_price/train.py
+    outs:
+    - models/house_price/artifacts/
+
+  train_sentiment:
+    cmd: cd models/sentiment && python train.py
+    deps:
+    - data/raw/sentiment.csv
+    - models/sentiment/train.py
+    outs:
+    - models/sentiment/artifacts/
+
+  train_churn:
+    cmd: cd models/churn && python train.py
+    deps:
+    - data/raw/churn.csv
+    - models/churn/train.py
+    outs:
+    - models/churn/artifacts/
+
+  train_image:
+    cmd: cd models/image_classification && python train.py
+    deps:
+    - data/raw/image_metadata.csv
+    - models/image_classification/train.py
+    outs:
+    - models/image_classification/artifacts/

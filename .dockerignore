@@ -1,0 +1,69 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+.mypy_cache
+.pytest_cache
+.hypothesis
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+
+# Documentation
+docs/
+*.md
+
+# Large model files (will be downloaded during training)
+models/*/artifacts/
+*.pkl
+*.joblib
+*.h5
+*.pb
+
+# DVC
+.dvc/cache
+
+# MLflow runs (will be recreated)
+mlruns/
+mlartifacts/
+
+# Logs
+logs/
+*.log
+
+# Monitoring data
+monitoring/data/
