@@ -1,0 +1,394 @@
+{
+  "mlflow_server": "http://localhost:5000",
+  "timestamp": "2025-09-25T11:21:59.798365",
+  "experiments": [
+    {
+      "name": "Hyperparameter Tuning Demo",
+      "id": "4",
+      "url": "http://localhost:5000/#/experiments/4",
+      "total_runs": 6,
+      "sample_runs": [
+        {
+          "name": "HPTune_06",
+          "id": "7925509c1543442bbb15af792d74dd4c",
+          "url": "http://localhost:5000/#/experiments/4/runs/7925509c1543442bbb15af792d74dd4c",
+          "status": "FINISHED",
+          "parameters": {
+            "n_estimators": "200",
+            "max_depth": "5"
+          },
+          "metrics": {
+            "accuracy": 1.0,
+            "n_features": 13.0,
+            "test_accuracy": 1.0,
+            "train_loss": 0.13852467575398006,
+            "val_loss": 0.2046180492193106
+          },
+          "artifacts_url": "http://localhost:5000/#/experiments/4/runs/7925509c1543442bbb15af792d74dd4c/artifacts"
+        },
+        {
+          "name": "HPTune_05",
+          "id": "327fd15f11bd4bba86b921291fce31d7",
+          "url": "http://localhost:5000/#/experiments/4/runs/327fd15f11bd4bba86b921291fce31d7",
+          "status": "FINISHED",
+          "parameters": {
+            "n_estimators": "100",
+            "max_depth": "3"
+          },
+          "metrics": {
+            "accuracy": 1.0,
+            "n_features": 13.0,
+            "test_accuracy": 1.0,
+            "train_loss": 0.16497079281283453,
+            "val_loss": 0.23999112813108883
+          },
+          "artifacts_url": "http://localhost:5000/#/experiments/4/runs/327fd15f11bd4bba86b921291fce31d7/artifacts"
+        },
+        {
+          "name": "HPTune_04",
+          "id": "fcb422e3ffd84a18bf58261e510220b2",
+          "url": "http://localhost:5000/#/experiments/4/runs/fcb422e3ffd84a18bf58261e510220b2",
+          "status": "FINISHED",
+          "parameters": {
+            "n_estimators": "200",
+            "max_depth": "10"
+          },
+          "metrics": {
+            "accuracy": 1.0,
+            "n_features": 13.0,
+            "test_accuracy": 1.0,
+            "train_loss": 0.16240133455032624,
+            "val_loss": 0.2578423715663775
+          },
+          "artifacts_url": "http://localhost:5000/#/experiments/4/runs/fcb422e3ffd84a18bf58261e510220b2/artifacts"
+        }
+      ]
+    },
+    {
+      "name": "Model Comparison Study",
+      "id": "3",
+      "url": "http://localhost:5000/#/experiments/3",
+      "total_runs": 3,
+      "sample_runs": [
+        {
+          "name": "Model_SVM",
+          "id": "9a2484e56e204605ad366edaba58bce2",
+          "url": "http://localhost:5000/#/experiments/3/runs/9a2484e56e204605ad366edaba58bce2",
+          "status": "FINISHED",
+          "parameters": {
+            "model_type": "SVM",
+            "dataset": "wine",
+            "n_features": "13",
+            "n_samples": "178"
+          },
+          "metrics": {
+            "accuracy": 0.7592592592592593,
+            "training_time": 0.0042514801025390625
+          },
+          "artifacts_url": "http://localhost:5000/#/experiments/3/runs/9a2484e56e204605ad366edaba58bce2/artifacts"
+        },
+        {
+          "name": "Model_Logistic_Regression",
+          "id": "edf96c032cdd4e0099f0547bff941636",
+          "url": "http://localhost:5000/#/experiments/3/runs/edf96c032cdd4e0099f0547bff941636",
+          "status": "FINISHED",
+          "parameters": {
+            "model_type": "Logistic Regression",
+            "dataset": "wine",
+            "n_features": "13",
+            "n_samples": "178"
+          },
+          "metrics": {
+            "accuracy": 1.0,
+            "training_time": 0.051674842834472656
+          },
+          "artifacts_url": "http://localhost:5000/#/experiments/3/runs/edf96c032cdd4e0099f0547bff941636/artifacts"
+        },
+        {
+          "name": "Model_Random_Forest",
+          "id": "8a886f679dae4ffba5c93612134979d5",
+          "url": "http://localhost:5000/#/experiments/3/runs/8a886f679dae4ffba5c93612134979d5",
+          "status": "FINISHED",
+          "parameters": {
+            "model_type": "Random Forest",
+            "dataset": "wine",
+            "n_features": "13",
+            "n_samples": "178"
+          },
+          "metrics": {
+            "accuracy": 1.0,
+            "training_time": 0.06388568878173828
+          },
+          "artifacts_url": "http://localhost:5000/#/experiments/3/runs/8a886f679dae4ffba5c93612134979d5/artifacts"
+        }
+      ]
+    },
+    {
+      "name": "California Housing Price Prediction",
+      "id": "2",
+      "url": "http://localhost:5000/#/experiments/2",
+      "total_runs": 3,
+      "sample_runs": [
+        {
+          "name": "GB_Config_3",
+          "id": "0430fcab89be47b781e9b631c55ad2e6",
+          "url": "http://localhost:5000/#/experiments/2/runs/0430fcab89be47b781e9b631c55ad2e6",
+          "status": "RUNNING",
+          "parameters": {
+            "n_estimators": "300",
+            "learning_rate": "0.01",
+            "max_depth": "5",
+            "model_type": "GradientBoosting",
+            "dataset": "housing"
+          },
+          "metrics": {},
+          "artifacts_url": "http://localhost:5000/#/experiments/2/runs/0430fcab89be47b781e9b631c55ad2e6/artifacts"
+        },
+        {
+          "name": "GB_Config_2",
+          "id": "55a210d7ec6043c9b43a7b25aa68f363",
+          "url": "http://localhost:5000/#/experiments/2/runs/55a210d7ec6043c9b43a7b25aa68f363",
+          "status": "FINISHED",
+          "parameters": {
+            "n_estimators": "200",
+            "learning_rate": "0.05",
+            "max_depth": "4",
+            "model_type": "GradientBoosting",
+            "dataset": "housing"
+          },
+          "metrics": {
+            "mse": 0.2594210165985601,
+            "rmse": 0.5093338950026398,
+            "mae": 0.3448446509259919,
+            "r2_score": 0.8020304951307581,
+            "training_time": 7.657700538635254,
+            "training_loss": 0.2118561996382381
+          },
+          "artifacts_url": "http://localhost:5000/#/experiments/2/runs/55a210d7ec6043c9b43a7b25aa68f363/artifacts"
+        },
+        {
+          "name": "GB_Config_1",
+          "id": "0b2a05cd0ccc4fc6bb0ebb26823bfccd",
+          "url": "http://localhost:5000/#/experiments/2/runs/0b2a05cd0ccc4fc6bb0ebb26823bfccd",
+          "status": "FINISHED",
+          "parameters": {
+            "n_estimators": "100",
+            "learning_rate": "0.1",
+            "max_depth": "3",
+            "model_type": "GradientBoosting",
+            "dataset": "housing"
+          },
+          "metrics": {
+            "mse": 0.2939973248643864,
+            "rmse": 0.5422152016168362,
+            "mae": 0.3716425690425596,
+            "r2_score": 0.7756446042829697,
+            "training_time": 2.968416690826416,
+            "training_loss": 0.26080826071404806
+          },
+          "artifacts_url": "http://localhost:5000/#/experiments/2/runs/0b2a05cd0ccc4fc6bb0ebb26823bfccd/artifacts"
+        }
+      ]
+    },
+    {
+      "name": "Iris Classification",
+      "id": "1",
+      "url": "http://localhost:5000/#/experiments/1",
+      "total_runs": 7,
+      "sample_runs": [
+        {
+          "name": "SVM",
+          "id": "c6310e40ca1e451aa4c410085e464c32",
+          "url": "http://localhost:5000/#/experiments/1/runs/c6310e40ca1e451aa4c410085e464c32",
+          "status": "FINISHED",
+          "parameters": {
+            "C": "1.0",
+            "break_ties": "False",
+            "cache_size": "200",
+            "class_weight": "None",
+            "coef0": "0.0",
+            "decision_function_shape": "ovr",
+            "degree": "3",
+            "gamma": "scale",
+            "kernel": "rbf",
+            "max_iter": "-1",
+            "probability": "True",
+            "random_state": "42",
+            "shrinking": "True",
+            "tol": "0.001",
+            "verbose": "False",
+            "model_type": "SVM",
+            "dataset": "iris"
+          },
+          "metrics": {
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0,
+            "training_time": 0.023166418075561523
+          },
+          "artifacts_url": "http://localhost:5000/#/experiments/1/runs/c6310e40ca1e451aa4c410085e464c32/artifacts"
+        },
+        {
+          "name": "Logistic_Regression",
+          "id": "ef08f4901290408fa0c9a0cd97dd3d86",
+          "url": "http://localhost:5000/#/experiments/1/runs/ef08f4901290408fa0c9a0cd97dd3d86",
+          "status": "FINISHED",
+          "parameters": {
+            "C": "1.0",
+            "class_weight": "None",
+            "dual": "False",
+            "fit_intercept": "True",
+            "intercept_scaling": "1",
+            "l1_ratio": "None",
+            "max_iter": "1000",
+            "multi_class": "deprecated",
+            "n_jobs": "None",
+            "penalty": "l2",
+            "random_state": "42",
+            "solver": "lbfgs",
+            "tol": "0.0001",
+            "verbose": "0",
+            "warm_start": "False",
+            "model_type": "Logistic Regression",
+            "dataset": "iris"
+          },
+          "metrics": {
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0,
+            "training_time": 0.02799701690673828
+          },
+          "artifacts_url": "http://localhost:5000/#/experiments/1/runs/ef08f4901290408fa0c9a0cd97dd3d86/artifacts"
+        },
+        {
+          "name": "RF_Config_5",
+          "id": "d3d244ad224f4009827591fd3f47b749",
+          "url": "http://localhost:5000/#/experiments/1/runs/d3d244ad224f4009827591fd3f47b749",
+          "status": "FINISHED",
+          "parameters": {
+            "n_estimators": "300",
+            "max_depth": "15",
+            "model_type": "RandomForest",
+            "dataset": "iris"
+          },
+          "metrics": {
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0,
+            "cv_mean": 0.9666666666666668,
+            "cv_std": 0.02108185106778919,
+            "training_time": 0.16218352317810059,
+            "n_features": 4.0,
+            "n_samples": 150.0,
+            "epoch_train_accuracy": 0.8932028055143717,
+            "epoch_val_accuracy": 0.8627137080568188
+          },
+          "artifacts_url": "http://localhost:5000/#/experiments/1/runs/d3d244ad224f4009827591fd3f47b749/artifacts"
+        }
+      ]
+    }
+  ],
+  "ui_features": {
+    "main_dashboard": {
+      "url": "http://localhost:5000",
+      "description": "Main MLflow dashboard showing all experiments",
+      "features": [
+        "Experiment list with run counts",
+        "Search and filter experiments",
+        "Create new experiments",
+        "Quick access to recent runs"
+      ]
+    },
+    "experiment_view": {
+      "url": "http://localhost:5000/#/experiments/{experiment_id}",
+      "description": "Detailed view of individual experiment",
+      "features": [
+        "Run comparison table",
+        "Parameter and metric columns",
+        "Run filtering and search",
+        "Bulk run selection",
+        "Chart view for metrics",
+        "Download runs as CSV"
+      ]
+    },
+    "run_detail": {
+      "url": "http://localhost:5000/#/experiments/{exp_id}/runs/{run_id}",
+      "description": "Individual run details",
+      "features": [
+        "Parameters and metrics display",
+        "Artifacts browser",
+        "Model information",
+        "Run metadata",
+        "Tags and notes",
+        "Metric charts"
+      ]
+    },
+    "model_registry": {
+      "url": "http://localhost:5000/#/models",
+      "description": "Centralized model registry",
+      "features": [
+        "Model versioning",
+        "Stage transitions (None/Staging/Production/Archived)",
+        "Model descriptions and annotations",
+        "Source run linking",
+        "Model deployment integration"
+      ]
+    },
+    "compare_runs": {
+      "url": "http://localhost:5000/#/experiments/{exp_id}/compare-runs",
+      "description": "Side-by-side run comparison",
+      "features": [
+        "Parameter comparison",
+        "Metric comparison",
+        "Artifact comparison",
+        "Parallel coordinates plot",
+        "Scatter plot view",
+        "Difference highlighting"
+      ]
+    }
+  },
+  "registered_models": [
+    {
+      "name": "iris_classifier",
+      "url": "http://localhost:5000/#/models/iris_classifier",
+      "description": "",
+      "versions": [
+        {
+          "version": "1",
+          "stage": "None",
+          "source_run": "c6310e40ca1e451aa4c410085e464c32",
+          "url": "http://localhost:5000/#/models/iris_classifier/versions/1"
+        }
+      ]
+    },
+    {
+      "name": "tuned_wine_classifier",
+      "url": "http://localhost:5000/#/models/tuned_wine_classifier",
+      "description": "",
+      "versions": [
+        {
+          "version": "1",
+          "stage": "None",
+          "source_run": "7925509c1543442bbb15af792d74dd4c",
+          "url": "http://localhost:5000/#/models/tuned_wine_classifier/versions/1"
+        }
+      ]
+    },
+    {
+      "name": "wine_classifier",
+      "url": "http://localhost:5000/#/models/wine_classifier",
+      "description": "",
+      "versions": [
+        {
+          "version": "1",
+          "stage": "None",
+          "source_run": "edf96c032cdd4e0099f0547bff941636",
+          "url": "http://localhost:5000/#/models/wine_classifier/versions/1"
+        }
+      ]
+    }
+  ]
+}
