@@ -1,0 +1,36 @@
+# Grafana dashboard provisioning configuration
+apiVersion: 1
+
+providers:
+  - name: 'MLOps Dashboards'
+    orgId: 1
+    folder: 'MLOps'
+    folderUid: 'mlops'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards
+
+  - name: 'Infrastructure Dashboards'
+    orgId: 1
+    folder: 'Infrastructure'
+    folderUid: 'infrastructure'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards
+
+  - name: 'System Dashboards'
+    orgId: 1
+    folder: 'System'
+    folderUid: 'system'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards

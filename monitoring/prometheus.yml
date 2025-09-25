@@ -1,0 +1,61 @@
+# Prometheus configuration for MLOps monitoring
+global:
+  scrape_interval: 15s      # Default scrape interval
+  evaluation_interval: 15s  # Rule evaluation interval
+  external_labels:
+    monitor: 'mlops-monitor'
+    environment: 'demo'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - "rules/*.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    scrape_interval: 15s
+    metrics_path: /metrics
+
+  # Node Exporter for system metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['localhost:9100']
+    scrape_interval: 15s
+
+  # MLOps API metrics
+  - job_name: 'mlops-api'
+    static_configs:
+      - targets: ['localhost:8001']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # MLflow metrics
+  - job_name: 'mlflow'
+    static_configs:
+      - targets: ['localhost:5000']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    scrape_timeout: 10s
+
+  # Additional ML model services
+  - job_name: 'ml-models'
+    static_configs:
+      - targets: ['localhost:8002', 'localhost:8003']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Custom application metrics
+  - job_name: 'custom-metrics'
+    static_configs:
+      - targets: ['localhost:9091']  # Pushgateway
+    scrape_interval: 15s

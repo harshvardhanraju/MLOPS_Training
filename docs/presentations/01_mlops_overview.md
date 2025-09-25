@@ -27,6 +27,26 @@
 
 ---
 
+A comprehensive MLOps demonstration covering the entire machine learning lifecycle with 5 different models, showcasing:
+
+- Data Versioning (DVC)
+- Model Versioning & Experiment Tracking (MLflow)
+- Model Serving (FastAPI)
+- Monitoring & Observability (Prometheus + Grafana)
+- CI/CD Pipelines (GitHub Actions)
+- Containerization (Docker)
+- Data Drift Detection (Evidently AI)
+- Automated Testing
+
+## Models Included
+
+1. **Iris Classification** - Scikit-learn multiclass classification
+2. **House Price Prediction** - XGBoost regression
+3. **Sentiment Analysis** - Transformers NLP
+4. **Image Classification** - TensorFlow/Keras computer vision
+5. **Customer Churn** - LightGBM binary classification
+
+
 ## 🔄 ML Model Lifecycle
 
 ```mermaid
